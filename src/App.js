@@ -11,7 +11,6 @@ import LinkPage from './components/LinkPage';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 import { Routes, Route } from 'react-router-dom';
-
 const ROLES = {
   'User': 2001,
   'Editor': 1984,
@@ -24,9 +23,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* public routes */}
+        <Route path="linkpage" element={<LinkPage />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="linkpage" element={<LinkPage />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* we want to protect these routes */}
