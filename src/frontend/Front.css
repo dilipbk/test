@@ -1,0 +1,61 @@
+.intro-text{
+  text-align: left;
+}
+  .intro-text h2 {
+    position: relative;
+    z-index: 2;
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 700;
+    opacity: 1;
+    visibility: visible;
+   
+    margin-bottom: 40px;
+  }
+  
+  .intro-text .div-dec {
+    width: 80px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: #fff;
+    margin-bottom: 40px;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .intro-text p {
+    color: #fff;
+    margin-right: 60px;
+    margin-bottom: 50px;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .intro-text h2 em {
+    font-style: normal;
+    color: #efff1a;
+  }
+  
+  .intro-text .buttons {
+    display: flex;
+    flex-wrap: wrap;
+   
+  }
+  .intro-text .buttons div {
+    padding:0 10px;
+  }
+  
+  .intro-text .buttons .green-button {
+    display: inline;
+    float: left;
+    margin-right: 20px;
+  }
+  
+ 
+  .introsection{height:calc( 100vh - 110px )}
+  .nameListque{width:100%}
+  .nameListque li{ background-color: transparent; color:white; text-transform: uppercase;}
+  .nameListque li .avatar{font-weight: bolder; font-size: 2.5rem;}
+  .nameListque .placeholder-que li{ opacity: .5;}
+
+.intro-r-text h2{ font-weight: 300; font-style:italic; color:white; margin: 2rem 0;}

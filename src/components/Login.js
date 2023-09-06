@@ -1,97 +1,142 @@
-import { useRef, useState, useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useRef, useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardGroup,
+  CCol,
+  CContainer,
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+} from "@coreui/react";
 
-import axios from '../api/axios';
-const LOGIN_URL = '/login';
+import axios from "../api/axios";
+const LOGIN_URL = "/login";
 
 const Login = () => {
-    const { setAuth, persist, setPersist } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
-    const userRef = useRef();
-    const errRef = useRef();
+  const userRef = useRef();
+  const errRef = useRef();
 
-    const [user, setUser] = useState('');
-    const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
+  const [user, setUser] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [errMsg, setErrMsg] = useState("");
 
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
+  useEffect(() => {
+    userRef.current.focus();
+  }, []);
 
-    useEffect(() => {
-        setErrMsg('');
-    }, [user, pwd])
+  useEffect(() => {
+    setErrMsg("");
+  }, [user, pwd]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try {
-            const response = await axios.post(LOGIN_URL,
-                {email: user, password:pwd} 
-            );
-            console.log(JSON.stringify(response?.data));
-            //console.log(JSON.stringify(response));
-            const access_token = response?.data?.access_token;
-            const roles = response?.data?.user?.role;
-            console.log("my roleis : "+ roles);
-            setAuth({ user, pwd, roles, access_token });
-            setUser('');
-            setPwd('');
-            navigate(from, { replace: true });
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            } else if (err.response?.status === 400) {
-                setErrMsg('Missing Username or Password');
-            } else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            } else {
-                setErrMsg('Login Failed');
-            }
-            errRef.current.focus();
-        }
+    try {
+      const response = await axios.post(LOGIN_URL, {
+        email: user,
+        password: pwd,
+      });
+      const access_token = response?.data?.access_token;
+      const roles = response?.data?.user?.role;
+      setAuth({ user, pwd, roles, access_token });
+      //localStorage.setItem('user',user);
+      setUser("");
+      setPwd("");
+      navigate('/home',{ replace: true });
+      //navigate(from, { replace: true });
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Login Failed");
+      }
+      errRef.current.focus();
     }
+  };
 
-    const togglePersist = () => {
-        setPersist(prev => !prev);
-    }
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
 
-    useEffect(() => {
-        localStorage.setItem("persist", persist);
-    }, [persist])
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
 
-    return (
-
-        <section>
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-            <h1>Sign In</h1>
-            <form onSubmit={handleSubmit}>
-                <label >Username:</label>
-                <input
-                    type="email"
-                    id="email"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => setUser(e.target.value)}
-                    value={user}
-                    required
-                />
-
-                <label >Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    onChange={(e) => setPwd(e.target.value)}
-                    value={pwd}
-                    required
-                />
-                <button>Sign In</button>
-                <div className="persistCheck">
+  return (
+    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <CContainer>
+        <CRow className="justify-content-center">
+          <CCol md={8}>
+            <CCardGroup>
+              <CCard className="p-4">
+                <CCardBody>
+                  <CForm>
+                    <h1>Login</h1>
+                    <p
+                      ref={errRef}
+                      className={errMsg ? "errmsg" : "offscreen"}
+                      aria-live="assertive"
+                    >
+                      {errMsg}
+                    </p>
+                    <p className="text-medium-emphasis">
+                      Sign In to your account
+                    </p>
+                    <CInputGroup className="mb-3">
+                     
+                      <CFormInput
+                        type="email"
+                        placeholder="Email"
+                        name="email"
+                        ref={userRef}
+                        value={user}
+                        onChange={(e) => setUser(e.target.value)}
+                        autoComplete="Email"
+                      />
+                    </CInputGroup>
+                    <CInputGroup className="mb-4">
+                      
+                      <CFormInput
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        value={pwd}
+                        onChange={(e) => setPwd(e.target.value)}
+                      />
+                    </CInputGroup>
+                    <CRow>
+                      <CCol xs={6}>
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          onClick={handleSubmit}
+                        >
+                          Login
+                        </CButton>
+                      </CCol>
+                      <CCol xs={6} className="text-right">
+                        <CButton color="link" className="px-0">
+                          Forgot password?
+                        </CButton>
+                      </CCol>
+                      <div className="persistCheck">
                     <input
                         type="checkbox"
                         id="persist"
@@ -100,16 +145,41 @@ const Login = () => {
                     />
                     <label htmlFor="persist">Trust This Device</label>
                 </div>
-            </form>
-            <p>
-                Need an Account?<br />
-                <span className="line">
-                    <Link to="/register">Sign Up</Link>
-                </span>
-            </p>
-        </section>
+                    </CRow>
+                  </CForm>
+                </CCardBody>
+              </CCard>
+              <CCard
+                className="text-white bg-primary py-5"
+                style={{ width: "44%" }}
+              >
+                <CCardBody className="text-center">
+                  <div>
+                    <h2>Sign up</h2>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
+                    <Link to="/register">
+                      <CButton
+                        color="primary"
+                        className="mt-3"
+                        active
+                        tabIndex={-1}
+                      >
+                        Register Now!
+                      </CButton>
+                    </Link>
+                  </div>
+                </CCardBody>
+              </CCard>
+            </CCardGroup>
+          </CCol>
+        </CRow>
+      </CContainer>
+    </div>
+  );
+};
 
-    )
-}
-
-export default Login
+export default Login;

@@ -3,9 +3,10 @@ import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
     const { auth } = useAuth();
+    console.log(JSON.stringify(auth));
     const location = useLocation();
     const rolesArray = allowedRoles.toString().split(','); 
-    return (
+      return (
           rolesArray.includes(String(auth.roles))
             ? <Outlet />
             : auth?.access_token //changed from user to accessToken to persist login after refresh
