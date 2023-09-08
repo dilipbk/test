@@ -51,11 +51,11 @@ const Login = () => {
       const access_token = response?.data?.access_token;
       const roles = response?.data?.user?.role;
       setAuth({ user, pwd, roles, access_token });
-      //localStorage.setItem('user',user);
+      localStorage.setItem('token',JSON.stringify({'user':user, 'roles':roles, 'access_token':access_token}));
       setUser("");
       setPwd("");
-      navigate('/home',{ replace: true });
-      //navigate(from, { replace: true });
+     navigate('home',{ replace: true });
+     // navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -153,26 +153,7 @@ const Login = () => {
                 className="text-white bg-primary py-5"
                 style={{ width: "44%" }}
               >
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton
-                        color="primary"
-                        className="mt-3"
-                        active
-                        tabIndex={-1}
-                      >
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
-                </CCardBody>
+                
               </CCard>
             </CCardGroup>
           </CCol>

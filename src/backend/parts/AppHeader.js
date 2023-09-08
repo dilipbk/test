@@ -1,35 +1,34 @@
 import React,{useState} from 'react'
-import { NavLink } from 'react-router-dom'
+import { useNavigate, Link } from "react-router-dom";
+import useLogout from '../../hooks/useLogout';
 import {
   CContainer,
   CNavbarBrand,
   CNavbar, 
   CNavbarNav,
   CNavItem,
-  CNavLink,
   CNavbarToggler,
   COffcanvas,
   COffcanvasHeader,
   COffcanvasTitle,
   CCloseButton,
-  COffcanvasBody,
-  CDropdown,
-  CDropdownToggle,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownDivider,
-  CForm,
-  CFormInput,
-  CButton,
+  COffcanvasBody
 
 } from '@coreui/react'
 
 import salonLogo from '../../assets/images/diamond-threading-salaon-logo.png';
 const AppHeader = () => {
+  const navigate = useNavigate();
+    const logout = useLogout();
+
+    const signOut = async () => {
+        await logout();
+        navigate('/login');
+    }
 
   const [visible, setVisible] = useState(false)
 return (
-  <CNavbar colorScheme="light" className="bg-light">
+  <CNavbar colorScheme="info" className="bg-pink">
     <CContainer fluid>
       <CNavbarBrand><img src={salonLogo}></img></CNavbarBrand>
       <CNavbarToggler
@@ -45,34 +44,19 @@ return (
         <COffcanvasBody>
           <CNavbarNav>
             <CNavItem>
-              <CNavLink href="#" active>
-                Home
-              </CNavLink>
+            <Link to="/login/home" className="active"> Client List </Link>
             </CNavItem>
             <CNavItem>
-              <CNavLink href="#">Link</CNavLink>
+            <Link to="/login/clientservice">Que List</Link>
             </CNavItem>
-            <CDropdown variant="nav-item" popper={false}>
-              <CDropdownToggle color="secondary">Dropdown button</CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem href="#">Action</CDropdownItem>
-                <CDropdownItem href="#">Another action</CDropdownItem>
-                <CDropdownDivider />
-                <CDropdownItem href="#">Something else here</CDropdownItem>
-              </CDropdownMenu>
-            </CDropdown>
             <CNavItem>
-              <CNavLink href="#" disabled>
-                Disabled
-              </CNavLink>
+            <Link to="/login/clientregister">Client Register</Link>
             </CNavItem>
+             <CNavItem>
+             <button onClick={signOut}>Sign Out</button>
+             </CNavItem>
           </CNavbarNav>
-          <CForm className="d-flex">
-            <CFormInput type="search" className="me-2" placeholder="Search" />
-            <CButton type="submit" color="success" variant="outline">
-              Search
-            </CButton>
-          </CForm>
+          
         </COffcanvasBody>
       </COffcanvas>
     </CContainer>

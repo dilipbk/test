@@ -8,38 +8,42 @@ import {
   CCard,
   CCardBody,
   CCardImage,
+  CCardTitle,
+  CCardText,
 } from '@coreui/react'
+import { Link } from "react-router-dom";
 import axios from '../api/axios';
 import React, { useState, useEffect } from 'react'
 import useAuth from "../hooks/useAuth";
+import defaultimg from '../assets/images/default-img.png'
 
 
 const ClientsList = () => {
   const { auth } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showItems, setShowItems] = useState(false)
-  const [showItemList, setShowItemList] = useState(true)
-  const [items, setItems] = useState([])
-  const sessionToken = localStorage.getItem('TOKEN')
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showItems, setShowItems] = useState(false);
+  const [showItemList, setShowItemList] = useState(true);
+  const [items, setItems] = useState([]);
+ const access_token = auth.access_token;
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData(); // Call the async function here
+  }, []); // Empty dependency array for componentDidMount behavior
+  
 
   const fetchData = async () => {
-    try {
-      const response = await axios.get('/client', {
-        headers: {
-          Authorization: `Bearer ${auth.access_token}`, // Use the token in the request header
-        },
-      })
-
-      console.log(response)
-      setItems(response.data.clients)
-    } catch (error) {
-      console.error('Error fetching client list:', error)
-    }
-  }
+      try {
+        const response = await axios.get('/client', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        
+        console.log(response);
+        setItems(response.data.clients);
+      } catch (error) {
+        console.error('Error fetching client list:', error);
+      }
+    };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value)
@@ -63,7 +67,7 @@ const ClientsList = () => {
             <CInputGroup>
               <CFormInput
                 type="text"
-                placeholder="Search for items..."
+                placeholder="Search customer by mobile number"
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
@@ -76,43 +80,30 @@ const ClientsList = () => {
         {showItemList && (
           <CRow className="mt-4">
             {filteredItems.map((item) => (
-              <CCol className="mb-3" md="3" key={item.id}>
-                <CCard>
-                  {/* Assuming 'profile_image' is a field in your API response */}
-                  <CCardImage
-                    orientation="top"
-                    src={item.profile_image ? item.profile_image : '/user_default.avif'}
-                    alt={item.f_name}
-                  />
-                  <CCardBody>
-                    <h5 className="card-title">{item.f_name + ' ' + item.l_name}</h5>
-                    {/* Add more item details as needed */}
-                  </CCardBody>
-                </CCard>
+
+            <CCol md={4} className="d-flex">
+              <CCol md={4}>
+                <CCardImage src={item.profile_image ? item.profile_image : defaultimg} alt={item.f_name} />
               </CCol>
+              <CCol md={8}>
+                <CCardBody>
+                  <CCardTitle> {item.f_name + ' ' + item.l_name}</CCardTitle>
+                  <CCardText>
+                    <p>Email: {item.email}</p>
+                    <p>Mobile: {item.phone}</p>
+                  </CCardText>
+                  <CCardText>
+                    <Link to={'/client/'+ item.id}>View Details</Link>
+                  </CCardText>
+                </CCardBody>
+              </CCol>
+              </CCol>
+            
+           
             ))}
           </CRow>
         )}
-        {showItems && (
-          <CRow className="mt-4 mb-3">
-            {filteredItems.map((item) => (
-              <CCol className="mb-3" md="3" key={item.id}>
-                <CCard>
-                  {/* Assuming 'profile_image' is a field in your API response */}
-                  <CCardImage
-                    orientation="top"
-                    src={item.profile_image ? item.profile_image : '/user_default.avif'}
-                    alt={item.f_name}
-                  />
-                  <CCardBody>
-                    <h5 className="card-title center">{item.f_name + ' ' + item.l_name}</h5>
-                    {/* Add more item details as needed */}
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            ))}
-          </CRow>
-        )}
+       
       </CCardBody>
     </CCard>
   )

@@ -21,12 +21,11 @@ import SuccessModel from "./parts/SuccessModel";
 
 const ProfileCard = () => {
   const navigate = useNavigate();
-  const { clientdata, updateClientData,clientcount,setClientCount } = useContext(Datacontext);
+  const { clientdata, updateClientData,clientcount,fetchQueData } = useContext(Datacontext);
   if(!clientdata){
     navigate('/')
   }
 
-  const apiUrl = "http://localhost/rest-api-c4/public/services";
   const [Services, setItems] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const sessionToken = localStorage.getItem("clientsdata");
@@ -46,7 +45,7 @@ const ProfileCard = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(apiUrl);
+      const response = await axios.get('/services');
       setItems(response.data.Services);
     } catch (error) {
       console.error("Error fetching client list:", error);
@@ -81,14 +80,13 @@ const ProfileCard = () => {
     console.log("Selected Services:", setSelectedServices);
 
     try {
-      const response = await axios.post(
-        "http://localhost/rest-api-c4/public/dailyservice/store",
+      const response = await axios.post('/dailyservice/store',
         {
           data: selectedServices,
         }
       );
-      setClientCount(clientcount+1);
       setShowModal(true);
+      fetchQueData();
     } catch (error) {
       console.error("Error:", error);
     }

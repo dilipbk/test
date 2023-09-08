@@ -4,7 +4,6 @@ import ProfileCard from './frontend/ProfileCard';
 import ClientRegistration from "./frontend/ClientRegistration";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import Home from "./components/Home";
 import Layout from "./components/Layout";
 import Editor from "./components/Editor";
 import Admin from "./components/Admin";
@@ -20,6 +19,7 @@ import { DataProvider } from "./components/Datacontext";
 //import Dashboard from "./backend/Dashboard";
 import CRegistration from "./backend/CRegistration";
 import ClientsList from "./backend/ClientsList";
+import ClientService from "./backend/ClientService";
 //import ClientActivity from "./backend/ClientActivity"
 import './App.css';
 const ROLES = {
@@ -39,7 +39,8 @@ function App() {
         <Route path="servicecard" element={<ProfileCard/>} />
         <Route path="signup" element={<ClientRegistration />} />
         <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="register" element={<Register />} /> 
+       
         <Route path="unauthorized" element={<Unauthorized />} />
       </Route>
         {/* we want to protect these routes */}
@@ -48,15 +49,13 @@ function App() {
           <Route
             element={<RequireAuth allowedRoles={[ROLES.Admin]} />}
           >
-            <Route path="home" element={<ClientsList />} />
+            <Route path="login/home" element={<ClientsList />} />
+            <Route path="login/clientregister" element={<CRegistration />} />
+            <Route path="login/clientservice" element={<ClientService />} />
           </Route>
-          <Route
-            element={<RequireAuth allowedRoles={[ROLES.Admin]} />}
-          >
-            <Route path="dashboard" element={<ClientsList />} />
-          </Route>
+         
 
-
+          {/* for future use}
           <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />
           </Route>
@@ -70,6 +69,7 @@ function App() {
           >
             <Route path="lounge" element={<Lounge />} />
           </Route>
+          {*/}
         </Route>
 
         {/* catch all */}

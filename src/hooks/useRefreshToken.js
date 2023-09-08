@@ -2,7 +2,8 @@ import axios from '../api/axios';
 import useAuth from './useAuth';
 
 const useRefreshToken = () => {
-    const {auth, setAuth } = useAuth();   
+    const {auth, setAuth } = useAuth();
+    const reauth =JSON.parse(localStorage.getItem("token"));  
     const refresh = async () => {
         const response = await axios.post('/reGenToken',{email:auth.user}
         );

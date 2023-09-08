@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {
   CContainer,
   CCard,
@@ -19,16 +19,17 @@ import Datacontext from "../components/Datacontext";
 
 
 const ClientRegistration = () => {
+ 
   const [validated, setValidated] = useState(false);
-  const {updateClientData} = useContext(Datacontext);
+  const {updateClientData,fwderr,fwdcontact} = useContext(Datacontext);
   const [f_name, setFname] = useState('')
   const [l_name, setLname] = useState('')
-  const [phone_no, setPhoneNo] = useState('')
-  const [street, setStreet] = useState('') 
+  const [phone_no, setPhoneNo] = useState(fwdcontact||'')
+  const [email, setEmail] = useState('') 
   const [error, setError] = useState('')
   const navigate = useNavigate();
   let contentStyle = {}
-
+  console.log('fwderr: ' + fwderr);
   const handleClientData = (data) => {
     updateClientData(data);
   };
@@ -42,7 +43,7 @@ const ClientRegistration = () => {
         f_name,
         l_name,
         phone_no,
-        street,
+        email,
       })
       // Assuming your API returns a token upon successful login
       const clientsdata = response.data.client;
@@ -76,7 +77,7 @@ const ClientRegistration = () => {
 
               <hr className="line" />
 
-              <small className="mt-4">{error && <div style={{ color: 'red' }}>{error}</div>}</small>
+              <small className="mt-4">{fwderr && <div style={{ color: 'red' }}>{fwderr}</div>}{error && <div style={{ color: 'red' }}>{error}</div>}</small>
               <CForm className="g-3 needs-validation"
                 noValidate
                 validated={validated}
@@ -130,15 +131,15 @@ const ClientRegistration = () => {
                   <CCol md="12">
                     <CFormFloating className="mb-3">
                       <CFormInput
-                        type="text"
-                        id="street"
-                        placeholder="Address"
-                        value={street}
-                        onChange={(e) => setStreet(e.target.value)}
-                        feedbackInvalid="Please provide address."
+                        type="email"
+                        id="email"
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        feedbackInvalid="Please provide youremail."
                         required
                       />
-                      <CFormLabel htmlFor="street"> Address</CFormLabel>
+                      <CFormLabel htmlFor="email">Email Address</CFormLabel>
                     </CFormFloating>
                   </CCol>
                 </CRow>

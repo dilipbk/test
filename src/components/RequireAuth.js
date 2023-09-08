@@ -3,7 +3,6 @@ import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
     const { auth } = useAuth();
-    console.log(JSON.stringify(auth));
     const location = useLocation();
     const rolesArray = allowedRoles.toString().split(','); 
       return (

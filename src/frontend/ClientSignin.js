@@ -19,7 +19,7 @@ import LogoImg from "../assets/images/diamond-threading-salaon-logo.png";
 import Datacontext from "../components/Datacontext";
 
 const ClientSignin = () => {
-  const {updateClientData} = useContext(Datacontext);
+  const {updateClientData,fwderr,setFwderror,setFwdContact} = useContext(Datacontext);
   const [validated, setValidated] = useState(false);
   const [phone_no, setNumber] = useState("");
   const [error, setError] = useState("");
@@ -53,6 +53,11 @@ const ClientSignin = () => {
       } else {
         setError("You are not yet the member.");
       }
+      setFwderror(error);
+      //console.log(error);
+     
+      setFwdContact(phone_no);
+       navigate('/signup')
     }
   };
   return (

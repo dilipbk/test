@@ -11,7 +11,7 @@ import {
   CFormFloating,
   CFormCheck,
 } from '@coreui/react'
-import axios from 'axios'
+import axios from '../api/axios'
 import React, { useState } from 'react'
 import './ClientRegistration.css'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ const CRegistration = () => {
   const [file, setSelectedFile] = useState(null)
   const navigate = useNavigate()
   const [error, setError] = useState('')
-  const apiUrl = 'http://localhost/rest-api-c4/public/client/store'
+  const apiUrl = '/client/store'
   const sessionToken = localStorage.getItem('TOKEN')
 
   const handleFileChange = (event) => {

@@ -8,7 +8,7 @@ const Layout = () => {
         <div>
           <AppHeader />
           <div className="wrapper d-flex flex-column min-vh-100 bg-light">           
-            <div className="body flex-grow-1 px-3">
+            <div className="container py-5">
               <Outlet />
             </div>
             <AppFooter />

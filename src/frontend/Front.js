@@ -15,9 +15,8 @@ import { Link } from "react-router-dom";
 import Datacontext from "../components/Datacontext";
 
 const Front = () => {
-  const {setClientCount,updateClientData} = useContext(Datacontext);
+  const {clientcount,updateClientData,clientList,fetchQueData} = useContext(Datacontext);
   const resetdata = useState([])
-  const [Services, setItems] = useState([]);
   const handleRemoveData = () => {
     // Remove an item from local storage 
     localStorage.removeItem('clientsdata');
@@ -27,7 +26,7 @@ const Front = () => {
  
   useEffect(() => {
     handleRemoveData();
-    fetchData();
+    fetchQueData();
   }, []);
   const NameCombine = (str) => {
     const firstChars = str
@@ -37,15 +36,7 @@ const Front = () => {
 
     return firstChars;
   };
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("/dailyservice");
-      setItems(response.data.dailyservices);
-      setClientCount(response.data.dailyservices.length);
-    } catch (error) {
-      console.error("Error fetching client list:", error);
-    }
-  };
+ 
 
   return (
     <>
@@ -82,18 +73,18 @@ const Front = () => {
             </div>
           </CCol>
           <CCol md={6} className="d-flex flex-column align-items-center j introsection ">
-          {Services.length ? (
+          {clientList.length ? (
           <div className="intro-r-text">
-          <h2>Currently we got <span>{Services.length}</span> customer on the list.</h2>
+          <h2>Currently we got <span>{clientcount}</span> customer on the list.</h2>
        
           </div>):(<div className="intro-r-text">
           <h2>Be first to be on the list!</h2>
          
           </div>)}
 
-            {Services.length ? (
+            {clientList.length ? (
               <CListGroup flush className="nameListque">                
-                {Services.map((Services, index) => (
+                {clientList.map((Services, index) => (
                   <CListGroupItem
                     key={index}
                     className="d-flex align-items-center "
@@ -117,7 +108,7 @@ const Front = () => {
                         <h4 className="px-3 my-0">
                           {Services.f_name + " " + Services.l_name}
                         </h4>
-                        <span className="ms-md-auto rounded-circle border" style={{'font-size':"2rem",'font-weight':'bold',"width":"60px", "height":"60px"}}>{index +1}</span>
+                        <span className="ms-md-auto rounded-circle border d-flex justify-content-center align-items-center" style={{'font-size':"2rem",'font-weight':'bold',"width":"60px", "height":"60px"}}>{index +1}</span>
                       </>
                     )}
                   </CListGroupItem>
