@@ -5,7 +5,7 @@
     position: relative;
     z-index: 2;
     font-size: 3rem;
-    color: #fff;
+    color:#4f5d73 ;
     font-weight: 700;
     opacity: 1;
     visibility: visible;
@@ -17,7 +17,7 @@
     width: 80px;
     height: 6px;
     border-radius: 3px;
-    background-color: #fff;
+    background-color: #4f4d4d;
     margin-bottom: 40px;
     opacity: 1;
     visibility: visible;
@@ -33,7 +33,7 @@
   
   .intro-text h2 em {
     font-style: normal;
-    color: #efff1a;
+    color: #ffa71a;
   }
   
   .intro-text .buttons {
@@ -51,11 +51,11 @@
     margin-right: 20px;
   }
   
- 
+ .displaytext{font-size: 2rem; font-weight: bold;}
   .introsection{height:calc( 100vh - 110px )}
   .nameListque{width:100%}
-  .nameListque li{ background-color: transparent; color:white; text-transform: uppercase;}
-  .nameListque li .avatar{font-weight: bolder; font-size: 2.5rem;}
+  .nameListque li{ background-color: transparent; color:#4f4d4d; text-transform: uppercase;}
+  .nameListque li .avatar{font-weight: bolder; font-size: 2.5rem;color:white}
   .nameListque .placeholder-que li{ opacity: .5;}
 
-.intro-r-text h2{ font-weight: 300; font-style:italic; color:white; margin: 2rem 0;}
+.intro-r-text h2{ font-weight: 300; font-style:italic; color:rgb(149, 146, 146); margin: 2rem 0;}

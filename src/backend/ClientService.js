@@ -1,31 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
 import {
   CContainer,
   CAvatar,
-  CCardBody,
-  CCardImage,
   CRow,
   CCol,
-  CImage,
-  CButton,
-  CCardTitle,
-  CDropdownMenu,
-  CDropdownToggle,
-  CDropdownItem,
   CListGroup,
-  CDropdown,
+  CAlert,
   CListGroupItem,
 } from "@coreui/react";
 import axios from "../api/axios";
-import Datacontext from "../components/Datacontext";
-import PlaceholderComponent from "../frontend/PlaceHolderFront";
 import ServiceList from "./ServiceList";
 import "./ProfileCard.css";
+import useAuth from "../hooks/useAuth";
+import DataContext from "../components/Datacontext";
 
 const ClientService = () => {
+  const { auth } = useAuth();
+  const {store_id} = useContext(DataContext);
   const [data, setData] = useState([]);
- 
+  const access_token = auth.access_token;
+  const [notification, setnotification] = useState('')
 
   useEffect(() => {
     fetchData();
@@ -40,7 +34,11 @@ const ClientService = () => {
   };
   const fetchData = async () => {
     try {
-      const response = await axios.get("/quelist");
+      const response = await axios.get("/quelist/"+ store_id,{
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
       setData(response.data.dailyservices);
     } catch (error) {
       console.error("Error fetching client list:", error);
@@ -51,7 +49,15 @@ const ClientService = () => {
   return (
     <>
       <CContainer className="d-flex justify-content-center align-items-center">
+        {notification && (
+          <CRow>
+            <CAlert color="success" className="d-flex align-items-center">
+              <div>{notification}</div>
+            </CAlert>
+          </CRow>
+        )}
         <CRow className="w-100">
+          <CCol md={12}><h3>Customer List</h3></CCol>
           {data.length ? (
             <CListGroup flush className="">
               {data.map((item, index) => (
@@ -87,14 +93,12 @@ const ClientService = () => {
                       </>
                     )}
                   </div>
-                 <ServiceList services={item.services} />
+                 <ServiceList services={item.services} setnotification={setnotification} />
                 </CListGroupItem>
               ))}
             </CListGroup>
           ) : (
-            <CListGroup flush className=" placeholder-que">
-              <PlaceholderComponent />
-            </CListGroup>
+            <h3>We are waiting on the customer.</h3>
           )}
         </CRow>
       </CContainer>

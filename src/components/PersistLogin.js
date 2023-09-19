@@ -6,9 +6,7 @@ import useAuth from '../hooks/useAuth';
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
-    const { auth, persist } = useAuth();
-    console.log(auth);
-
+    const { auth, persist } = useAuth();   
     useEffect(() => {
         let isMounted = true;
 
@@ -31,9 +29,7 @@ const PersistLogin = () => {
         return () => isMounted = false;
     }, [])
 
-    useEffect(() => {
-        console.log(`isLoading: ${isLoading}`)
-        console.log(`aT: ${JSON.stringify(auth?.access_token)}`)
+    useEffect(() => {      
     }, [isLoading])
 
     return (

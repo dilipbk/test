@@ -4,8 +4,8 @@ import {
     CNavbarBrand,
     CNavbarNav, 
     CNavItem,
-    CNavLink
   } from '@coreui/react';
+import { Link } from 'react-router-dom';
 import salonLogo from '../../assets/images/diamond-threading-salaon-logo.png';
 function Header() {
   return (
@@ -14,13 +14,7 @@ function Header() {
         <CNavbarBrand href="/">
           <img src={salonLogo} alt="" height="80" />
         </CNavbarBrand>
-        <CNavbarNav className="xr-4 mb-2 mb-lg-0">
-            <CNavItem>
-              <CNavLink href="/login" active>
-                Admin Login
-              </CNavLink>
-            </CNavItem>
-        </CNavbarNav>
+        
       </CContainer>
     </CNavbar>
   );

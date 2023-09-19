@@ -6,28 +6,34 @@ import {
   CContainer,
   CRow,
   CCol,
+  CAlert,
 } from "@coreui/react";
-import axios from "../api/axios";
 import Header from "./parts/Header";
-import PlaceholderComponent from "./PlaceHolderFront";
 import "./Front.css";
 import { Link } from "react-router-dom";
 import Datacontext from "../components/Datacontext";
+import axios from "../api/axios";
 
 const Front = () => {
-  const {clientcount,updateClientData,clientList,fetchQueData} = useContext(Datacontext);
-  const resetdata = useState([])
+  const [err, setErrMsg] = useState('');
+  const {
+    store_id,
+    fwderr,
+    ResetData,
+    updateClientList,
+    updateClientData,
+    clientList,
+    updateClientCount,
+  } = useContext(Datacontext);
+  
   const handleRemoveData = () => {
-    // Remove an item from local storage 
-    localStorage.removeItem('clientsdata');
-    updateClientData([])
+    // Remove an item from local storage
+    localStorage.removeItem("clientsdata");
+    updateClientData([]);
   };
- 
- 
-  useEffect(() => {
-    handleRemoveData();
-    fetchQueData();
-  }, []);
+
+  ResetData();
+
   const NameCombine = (str) => {
     const firstChars = str
       .split(" ")
@@ -36,54 +42,80 @@ const Front = () => {
 
     return firstChars;
   };
- 
+
+  useEffect(() => {
+    handleRemoveData();
+    fetchQueData();
+    const interval =  setInterval(()=>{
+      fetchQueData();
+    },180000)
+    return () => clearInterval(interval);
+  }, []);
+  
+  
+    const fetchQueData = async () => {
+      try {
+        const response = await axios.get("/dailyservice/"+store_id);
+        updateClientList(response.data.dailyservices);
+        updateClientCount(response.data.dailyservices.length);
+      } catch (error) {
+          if (!err?.response) {
+            setErrMsg("No Server Response");
+          } else if (err.response?.status === 400) {
+            setErrMsg("Missing Data");
+          } else if (err.response?.status === 401) {
+            setErrMsg("Unauthorized");
+          } else {
+            setErrMsg("no data found");
+          }
+      }
+    };
 
   return (
     <>
       <Header />
       <CContainer>
+        {fwderr && (
+          <CRow>
+            <CAlert color="success" className="d-flex align-items-center">
+              <div>{fwderr}</div>
+            </CAlert>
+          </CRow>
+        )}
         <CRow>
           <CCol md={6} className="d-flex align-items-center introsection ">
             <div className="intro-text">
               <h2>
-                <em>Revitalize</em> Your Salon Experience:
+                <em>Welcome</em> to
                 <br />
-                &amp; Prepare for a <em>Complete Upgrade</em>
+                Diamond Threading <br />
+                <em>Salon</em>
               </h2>
               <div className="div-dec"></div>
-              <p>
-                Step into a world of beauty and relaxation where every visit is
-                a delightful experience.{" "}
-              </p>
+
               <div className="buttons">
                 <div>
-                  <a className="btn btn-outline-info btn-lg" href="#">
-                    Discover More
-                  </a>
-                </div>
-                <div>
-                  <a className="btn btn-outline-warning btn-lg" href="#">
-                    Contact Us
-                  </a>
-                </div>
-                <div>
-                  <Link className="btn btn-warning btn-lg" to="/signin"> Add me on Que</Link>
+                  <Link
+                    size="lg"
+                    className="btn btn-primary btn-lg px-5 py-3"
+                    to="/signin"
+                  >
+                    Check In
+                  </Link>
                 </div>
               </div>
             </div>
           </CCol>
-          <CCol md={6} className="d-flex flex-column align-items-center j introsection ">
-          {clientList.length ? (
-          <div className="intro-r-text">
-          <h2>Currently we got <span>{clientcount}</span> customer on the list.</h2>
-       
-          </div>):(<div className="intro-r-text">
-          <h2>Be first to be on the list!</h2>
-         
-          </div>)}
-
-            {clientList.length ? (
-              <CListGroup flush className="nameListque">                
+          <CCol
+            md={6}
+            className="d-flex flex-column align-items-center introsection "
+          >
+             <div className="text-black pt-1">
+                <h2 style={{'color':'#000'}}>Waiting List</h2>
+              </div>
+            
+            {clientList.length >0 && (
+              <CListGroup flush className="nameListque">
                 {clientList.map((Services, index) => (
                   <CListGroupItem
                     key={index}
@@ -96,28 +128,29 @@ const Front = () => {
                           status="success"
                           size="xl"
                         />
-                        <h4 className="px-3 my-0">
-                          {Services.f_name + " " + Services.l_name}
-                        </h4>
                       </>
                     ) : (
                       <>
                         <CAvatar color="secondary" status="danger" size="xl">
                           {NameCombine(Services.f_name + " " + Services.l_name)}
                         </CAvatar>
-                        <h4 className="px-3 my-0">
-                          {Services.f_name + " " + Services.l_name}
-                        </h4>
-                        <span className="ms-md-auto rounded-circle border d-flex justify-content-center align-items-center" style={{'font-size':"2rem",'font-weight':'bold',"width":"60px", "height":"60px"}}>{index +1}</span>
+                        
+                        <span
+                          className="ms-md-auto displaytext rounded-circle border d-flex justify-content-center align-items-center"
+                          style={{
+                            
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        >
+                          {index + 1}
+                        </span>
                       </>
                     )}
                   </CListGroupItem>
                 ))}
               </CListGroup>
-            ) : (
-              <CListGroup flush className="nameListque placeholder-que">
-                 <PlaceholderComponent/>
-              </CListGroup>
+           
             )}
           </CCol>
         </CRow>

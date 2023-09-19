@@ -1,2 +1,8 @@
-body { background-color: #901e8d;}
 .badgeroll .badge{ font-size:2rem}
+
+@media screen and (min-width:768px){
+    .vheight{height:100vh}
+}
+@media screen and (max-width:768px){
+    .vheight{height:100%; position: absolute;}
+}

@@ -4,10 +4,8 @@ import {
   CContainer,
   CCard,
   CCardBody,
-  CCardImage,
   CRow,
   CCol,
-  CImage,
   CButton,
   CCardTitle,
   CListGroup,
@@ -17,11 +15,10 @@ import axios from "../api/axios";
 import Datacontext from "../components/Datacontext";
 import Header from "./parts/Header";
 import "./ProfileCard.css";
-import SuccessModel from "./parts/SuccessModel";
 
 const ProfileCard = () => {
   const navigate = useNavigate();
-  const { clientdata, updateClientData,clientcount,fetchQueData } = useContext(Datacontext);
+  const {store_id,setFwderror,clientdata, updateClientData,updateClientList,updateClientCount} = useContext(Datacontext);
   if(!clientdata){
     navigate('/')
   }
@@ -29,12 +26,12 @@ const ProfileCard = () => {
   const [Services, setItems] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const sessionToken = localStorage.getItem("clientsdata");
-  const [showModal, setShowModal] = useState(false);
+
 
   const loadClientData = () => {
     if (clientdata.length === 0) {
       const jsObject = JSON.parse(sessionToken);
-      updateClientData(jsObject);
+      updateClientData(jsObject);      
     }
   };
 
@@ -64,6 +61,7 @@ const ProfileCard = () => {
           image: clickedService.image,
           service: clickedService.service,
           client_id: clientdata.id,
+          store_id: store_id,
         },
       ]);
     }
@@ -73,20 +71,32 @@ const ProfileCard = () => {
       prevSelected.filter((item) => item !== Services)
     );
   };
+  const NameCombine = (str) => {
+    const firstChars = str
+      .split(" ")
+      .map((word) => word[0])
+      .join("");
+
+    return firstChars;
+  };
+  const removeLocalStorage = ()=>{
+    updateClientData([])
+    localStorage.removeItem('clientsdata');
+    navigate('/');
+  }
 
 
   const handleCheckout = async () => {
     // Handle the checkout process with the selectedServices list
-    console.log("Selected Services:", setSelectedServices);
 
     try {
-      const response = await axios.post('/dailyservice/store',
+       await axios.post('/dailyservice/store',
         {
           data: selectedServices,
         }
       );
-      setShowModal(true);
-      fetchQueData();
+      removeLocalStorage();
+      setFwderror('Thank you for registerting the services.')
     } catch (error) {
       console.error("Error:", error);
     }
@@ -95,48 +105,49 @@ const ProfileCard = () => {
   return (
     <>
       <Header />
-      <CContainer className="d-flex justify-content-center align-items-center profilecardcontainer">
-        <CRow className="w-100">
-          <CCol md={3} className="d-flex justify-content-center">
+      <CContainer className="mt-5">
+        <CRow>
+          <CCol md={12}><h3>Choose your service:</h3></CCol>
+        </CRow>
+   
+        <CRow className="w-100 ">
+          
+          <CCol md={8} xl={9}>
             <CRow>
-              <CCard className="p-3 py-4 col-md-12">
-                <CCardBody className="text-center">
-                  <CImage
-                    src="https://i.imgur.com/stD0Q19.jpg"
-                    width="100"
-                    className="rounded-circle"
-                  />
-                  <h3 className="mt-2">
-                    {clientdata.f_name + " " + clientdata.l_name}
-                  </h3>
-                  <span className="mt-1 clearfix">{clientdata.email}</span>
-
-                  <hr className="line" />
-
-                  <small className="mt-4">
-                    I am an android developer working at Google Inc at
-                    California, USA
-                  </small>
-                </CCardBody>
-              </CCard>
-              {selectedServices.length > 0 && (
-                <CCard className="p-3 col-md-12 mt-3">
-                  <h3>Selected Service</h3>
+              {Services.map((Services, index) => (
+                <CCol md={4} lg={4} sm={6} key={index} className="mb-3">
+                  <CCard
+                    onClick={() => handleCardClick(Services)}
+                    className={
+                      selectedServices.some(
+                        (selectedService) =>
+                          selectedService.service === Services.service
+                      )
+                        ? "selected service-input"
+                        : "service-input"
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                   
+                    <CCardBody>
+                      <CCardTitle className="text-capitalize text-large">{Services.service}</CCardTitle>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              ))}
+            </CRow>
+          </CCol>
+          <CCol md={4} xl={3}>
+          {selectedServices.length > 0 && (
+                <CCard className="p-3 col-md-12">
+                  <h3>Selected Services</h3>
                   <CListGroup>
                     {selectedServices.map((Services, index) => (
                       <CListGroupItem
                         key={index}
                         className="d-flex justify-content-between align-items-center"
                       >
-                        <div className="d-flex align-items-center">
-                          <div className="avatar avatar-md mr-2">
-                            <CCardImage
-                              src={Services.image}
-                              alt={`Services ${index + 1}`}                              
-                              className="avatar-img"
-                            />
-                          </div>
-
+                        <div className="d-flex align-items-center">                          
                           <span className="ps-1 text-capitalize fw-bold ">
                             {Services.service}
                           </span>
@@ -157,44 +168,13 @@ const ProfileCard = () => {
                     onClick={handleCheckout}
                     className="mt-3"
                   >
-                    Checkout
+                    CHECK IN
                   </CButton>
                 </CCard>
               )}
-            </CRow>
-          </CCol>
-          <CCol md={9} xl={9}>
-            <CRow>
-              {Services.map((Services, index) => (
-                <CCol md="3" sm="6" key={index} className="mb-3 service-item">
-                  <CCard
-                    onClick={() => handleCardClick(Services)}
-                    className={
-                      selectedServices.some(
-                        (selectedService) =>
-                          selectedService.service === Services.service
-                      )
-                        ? "selected"
-                        : ""
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <CCardImage
-                      src={Services.image}
-                      alt={`Services ${index + 1}`}
-                      top
-                    />
-                    <CCardBody>
-                      <CCardTitle>{Services.service}</CCardTitle>
-                    </CCardBody>
-                  </CCard>
-                </CCol>
-              ))}
-            </CRow>
           </CCol>
         </CRow>
       </CContainer>
-         <SuccessModel updateClientData={updateClientData}  show={showModal} setShowModal= {setShowModal} clientcount={clientcount} />
     </>
   );
 };

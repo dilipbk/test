@@ -25,7 +25,11 @@ const ClientSignin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const handleNumberChange = (event) => {
-    setNumber(event.target.value);
+   
+    const input = event.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    if (input.length <= 10) {
+      setNumber(event.target.value);
+    }
   };
   const handleClientData = (data) => {
     updateClientData(data);
@@ -42,7 +46,6 @@ const ClientSignin = () => {
       localStorage.setItem('clientsdata',JSON.stringify( clientsdata))
       navigate('/servicecard');
     } catch (err) {
-      console.log(err);
       if (!err?.response) {
         setError("No data enter");
         setValidated(true);
@@ -62,16 +65,13 @@ const ClientSignin = () => {
   };
   return (
     <>
-      <CContainer className="d-flex vh-100 align-items-center">
-        <CCard className="p-3 py-4 col-sm-12 col-md-5 m-auto">
+      <CContainer className="d-flex vheight align-items-center">
+        <CCard className="p-3 py-4 col-sm-12 col-md-5 m-auto boxshadow bg-light">
           <CCardBody className="text-center">
             <CImage src={LogoImg} width="70%" className="rounded mb-3" />
-            <h2 className="mt-2">Sign in </h2>
-            <span className="mt-1 clearfix">
-              Please signin to placed on cuelist
-            </span>
+            <h2 className="mt-2">Check In</h2>        
 
-            <hr className="line" />
+          
 
             <CRow className="social-buttons">
               <CForm
@@ -102,8 +102,8 @@ const ClientSignin = () => {
                 </CRow>
                 
                 <CRow>
-                  <CCol xs={12} className="mt-3">
-                    <CButton color="primary"onClick={haldelRegistration}>PROCEED NEXT</CButton>
+                  <CCol xs={12} className="mt-2">
+                    <CButton size="lg" color="primary" className=" px-5" onClick={haldelRegistration}>NEXT</CButton>
                   </CCol>
                   <p className="mt-3">Not Register yet?  <Link to="/signup">Register here</Link></p>
                 </CRow>

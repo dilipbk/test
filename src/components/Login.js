@@ -54,7 +54,7 @@ const Login = () => {
       localStorage.setItem('token',JSON.stringify({'user':user, 'roles':roles, 'access_token':access_token}));
       setUser("");
       setPwd("");
-     navigate('home',{ replace: true });
+      navigate('clientservice',{ replace: true });
      // navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
@@ -150,7 +150,7 @@ const Login = () => {
                 </CCardBody>
               </CCard>
               <CCard
-                className="text-white bg-primary py-5"
+                className="text-white bg-primary py-5 d-sm-none d-md-block"
                 style={{ width: "44%" }}
               >
                 

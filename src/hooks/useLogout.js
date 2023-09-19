@@ -8,6 +8,8 @@ const useLogout = () => {
         setAuth({});
         try {
             const response = await axios('/logout');
+            localStorage.removeItem('token');
+            
         } catch (err) {
             console.error(err);
         }

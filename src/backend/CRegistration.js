@@ -12,36 +12,41 @@ import {
   CFormCheck,
 } from '@coreui/react'
 import axios from '../api/axios'
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import './ClientRegistration.css'
 import { useNavigate } from 'react-router-dom'
+import useAuth from "../hooks/useAuth";
+import DataContext from '../components/Datacontext'
+
 const CRegistration = () => {
-  const [f_name, setFname] = useState('')
-  const [l_name, setLname] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone_no, setPhoneNo] = useState('')
-  const [street, setStreet] = useState('')
-  const [state, setState] = useState('')
-  const [city, setCity] = useState('')
-  const [zipcode, setZipcode] = useState('')
-  const [gender, setGender] = useState('FEMALE')
-  const [file, setSelectedFile] = useState(null)
-  const navigate = useNavigate()
-  const [error, setError] = useState('')
+  const {store_id} =useContext(DataContext);
+  const { auth } = useAuth();
+  const [f_name, setFname] = useState('');
+  const [l_name, setLname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone_no, setPhoneNo] = useState('');
+  const [street, setStreet] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [zipcode, setZipcode] = useState('');
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const access_token = auth.access_token;
   const apiUrl = '/client/store'
-  const sessionToken = localStorage.getItem('TOKEN')
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0])
-  }
+  const handleNumberChange = (event) => {
+   
+    const input = event.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    if (input.length <= 10) {
+      setPhoneNo(event.target.value);
+    }
+  };
 
-  const handleGenderChange = (event) => {
-    setGender(event.target.value)
-  }
+
 
   const headerConfig = {
     headers: {
-      Authorization: `Bearer ${sessionToken}`,
+      Authorization: `Bearer ${access_token}`,
     },
   }
 
@@ -61,15 +66,12 @@ const CRegistration = () => {
           city,
           state,
           zipcode,
-          gender,
-          file,
+          store_id,
         },
         headerConfig,
       )
-      // Assuming your API returns a token upon successful login
-      console.log(response)
 
-      navigate('/clients/clients-list')
+      navigate('/login/home')
     } catch (error) {
       setError('Please fill the required fields')
       console.error('Login Error:', error)
@@ -133,7 +135,7 @@ const CRegistration = () => {
                   id="mobile_number"
                   placeholder="Mobile Number"
                   value={phone_no}
-                  onChange={(e) => setPhoneNo(e.target.value)}
+                  onChange={handleNumberChange}
                   required
                 />
                 <CFormLabel htmlFor="mobile_number">Mobile Number</CFormLabel>
@@ -194,57 +196,11 @@ const CRegistration = () => {
                 <CFormLabel htmlFor="street">Zip-code</CFormLabel>
               </CFormFloating>
             </CCol>
-          </CRow>
-          <CFormLabel>Gender</CFormLabel>
-          <CRow className="mb-2">
-            <CCol xl>
-              <CFormCheck
-                button={{ color: 'success', variant: 'outline' }}
-                type="radio"
-                className="paddingleft"
-                name="gender"
-                id="male-outlined"
-                autoComplete="off"
-                label="Male"
-                value="MALE"
-                checked={gender === 'MALE'}
-                onChange={handleGenderChange}
-              />
-              <CFormCheck
-                button={{ color: 'success', variant: 'outline' }}
-                type="radio"
-                name="gender"
-                id="famale-outlined"
-                autoComplete="off"
-                value="FEMALE"
-                label="Female"
-                checked={gender === 'FEMALE'}
-                onChange={handleGenderChange}
-              />
-              <CFormCheck
-                button={{ color: 'success', variant: 'outline' }}
-                type="radio"
-                name="gender"
-                id="trans-outlined"
-                autoComplete="off"
-                value="TRANS"
-                label="Trans"
-                checked={gender === 'TRANS'}
-                onChange={handleGenderChange}
-              />
-            </CCol>
-          </CRow>
-          <CRow className="mb-3">
-            <CCol>
-              <CFormLabel>
-                <label htmlFor="file">Profile Image Upload</label>
-                <CFormInput type="file" id="file" name="file" onChange={handleFileChange} />
-              </CFormLabel>
-            </CCol>
-          </CRow>
+          </CRow>          
+          
           <CRow>
             <CCol>
-              <CButton type="submit" color="primary">
+              <CButton type="submit" color="primary" >
                 Register
               </CButton>
             </CCol>

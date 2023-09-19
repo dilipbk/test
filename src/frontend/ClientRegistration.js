@@ -16,6 +16,7 @@ import {
 import axios from '../api/axios';
 import LogoImg from "../assets/images/diamond-threading-salaon-logo.png";
 import Datacontext from "../components/Datacontext";
+import "./Service.css";
 
 
 const ClientRegistration = () => {
@@ -28,10 +29,16 @@ const ClientRegistration = () => {
   const [email, setEmail] = useState('') 
   const [error, setError] = useState('')
   const navigate = useNavigate();
-  let contentStyle = {}
-  console.log('fwderr: ' + fwderr);
   const handleClientData = (data) => {
     updateClientData(data);
+  };
+
+  const handleNumberChange = (event) => {
+   
+    const input = event.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    if (input.length <= 10) {
+      setPhoneNo(event.target.value);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -55,27 +62,19 @@ const ClientRegistration = () => {
       setError('Please fill the required fields')
     }
   }
-  contentStyle = { height: '100vh' }
+
   return (
     <>
         <CContainer
-          className="d-flex justify-content-center align-items-center"
-          style={contentStyle}
+          className="d-flex justify-content-center vheight align-items-center"
+       
         >
-          <CCard className="p-3 py-4">
+          <CCard className="p-3 py-4  bg-light">
             <CCardBody className="text-center">
             <CImage src={LogoImg} width="70%" className="rounded mb-3" />
-              <h3 className="mt-2">Sign Up</h3>
-              <span className="mt-1 clearfix">Your gateway to beauty care.</span>
+              <h3 className="mt-2">Sign Up</h3>  
 
-              <CRow className="mt-3 my-3">
-                <CCol>
-                  <h5>Fill the details to proceed</h5>
-                  <span className="num">To get the virtual token</span>
-                </CCol>
-              </CRow>
-
-              <hr className="line" />
+              
 
               <small className="mt-4">{fwderr && <div style={{ color: 'red' }}>{fwderr}</div>}{error && <div style={{ color: 'red' }}>{error}</div>}</small>
               <CForm className="g-3 needs-validation"
@@ -121,7 +120,7 @@ const ClientRegistration = () => {
                         id="mobile_number"
                         placeholder="Mobile Number"
                         value={phone_no}
-                        onChange={(e) => setPhoneNo(e.target.value)}
+                        onChange={handleNumberChange}
                         feedbackInvalid="Please provide a mobile number."
                         required
                       />
@@ -144,10 +143,12 @@ const ClientRegistration = () => {
                   </CCol>
                 </CRow>
 
-                <CRow className="profile mt-5">
-                  <CButton type="submit" color="primary">
+                <CRow className="profile mt-2">
+                  <CCol>
+                  <CButton type="submit" color="primary" size="lg" className="px-5" >
                     Register
                   </CButton>
+                  </CCol>
                 </CRow>
                 <p className="mt-3">Already Sign up? <Link to="/signin">Sign in here</Link></p>
               </CForm>

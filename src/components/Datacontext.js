@@ -1,5 +1,4 @@
-import React, { createContext, useState } from 'react';
-import axios from '../api/axios';
+import React, { createContext, useState, useEffect } from 'react';
 
 const DataContext = createContext({});
 
@@ -10,7 +9,18 @@ export const DataProvider = ({ children }) => {
   const [clientcount, setClientCount] = useState(0);
   const [fwderr, setFwderror] = useState('');
   const [fwdcontact, setFwdContact] = useState('');
+  const [count, setCount] = useState(0);
+  const [store_id,setLocalStore] = useState(localStorage.getItem('STOREID') || '');
 
+
+  
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+ const setLocalStoreID = (newData) => {
+  setLocalStore(newData);
+  };
   const updateClientList = (newData) => {
     setClientList(newData);
   };
@@ -23,18 +33,17 @@ export const DataProvider = ({ children }) => {
     setClientCount(newData);
   };
 
-  const fetchQueData = async () => {
-    try {
-      const response = await axios.get("/dailyservice");
-      updateClientList(response.data.dailyservices);
-      updateClientCount(response.data.dailyservices.length);
-    } catch (error) {
-      console.error("Error fetching client list:", error);
-    }
+
+  const ResetData= () => {
+    setTimeout(() => {
+      setFwderror('');
+    }, 5000);
   };
 
+ 
+
   return (
-    <DataContext.Provider value={{fetchQueData,clientList,updateClientList, clientdata, updateClientData, clientcount,fwderr,fwdcontact,setFwderror,setFwdContact }}>
+    <DataContext.Provider value={{setLocalStoreID,store_id,ResetData,count,increment,clientList,updateClientList, clientdata, updateClientData,updateClientCount, clientcount,fwderr,fwdcontact,setFwderror,setFwdContact }}>
       {children}
     </DataContext.Provider>
   );
