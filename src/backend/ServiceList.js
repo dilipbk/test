@@ -139,6 +139,7 @@ function ServiceList({ services, setnotification, setFlag }) {
                     setVisible(!visible);
                     setData({ id: service.id, service: service.service });
                   }}
+                  color="dark"
                 >
                   Action
                 </CButton>
@@ -217,7 +218,7 @@ function ServiceList({ services, setnotification, setFlag }) {
             </CCol>
 
             <CCol xs={12}>
-              <CButton color="primary" type="submit">
+              <CButton color="dark" type="submit">
                 Submit
               </CButton>
             </CCol>

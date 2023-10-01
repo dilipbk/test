@@ -32,7 +32,7 @@ const ClientService = () => {
   useEffect(() => {
     fetchData();
     fetchFinishedData();
-  }, []);
+  }, [activeKey]);
   const NameCombine = (str) => {
     const firstChars = str
       .split(" ")
@@ -69,7 +69,7 @@ const ClientService = () => {
 
   return (
     <>
-      <CContainer className="d-flex justify-content-center align-items-center">
+      <CContainer>
         {notification && (
           <CRow>
             <CAlert color="success" className="d-flex align-items-center">

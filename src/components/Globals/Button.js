@@ -1,18 +1,13 @@
-import React from "react";
+import { CButton } from "@coreui/react";
 
 const Button = ({ children, options }) => {
   if (options) {
     return (
-      <button {...options} shape="rounded-0">
+      <CButton {...options} shape="rounded-0" color="dark">
         {children}
-      </button>
+      </CButton>
     );
   }
-  return (
-    <button className="bg-black" shape="rounded-0">
-      {children}
-    </button>
-  );
 };
 
 export default Button;

@@ -17,6 +17,8 @@ import {
 import "./Service.css";
 import LogoImg from "../assets/images/diamond-threading-salaon-logo.png";
 import Datacontext from "../components/Datacontext";
+// import { Button } from "@coreui/coreui";
+import Button from "../components/Globals/Button";
 
 const ClientSignin = () => {
   const { updateClientData, fwderr, setFwderror, setFwdContact } =
@@ -69,7 +71,7 @@ const ClientSignin = () => {
         {error && <div style={{ color: "red" }}>{error}</div>}
 
         <CRow>
-          <CCol md={12} lg={6}>
+          <CCol md={12} lg={12}>
             <CFormFloating className="mb-3">
               <CFormInput
                 type="text"
@@ -85,20 +87,20 @@ const ClientSignin = () => {
               <CFormLabel htmlFor="contactnumber">Mobile Number</CFormLabel>
             </CFormFloating>
           </CCol>
-       
-          <CCol md={12} lg={6} >
-          <div className="d-grid">
-            <CButton
-              size="lg"
-              color="primary"
-              style={{padding:"12px 0px"}}
-              onClick={haldelRegistration}
-            >
-              CHECK IN
-            </CButton>
+
+          <CCol md={12} lg={12}>
+            <div className="d-grid">
+              <Button
+                options={{
+                  size: "lg",
+                  className: "py-3",
+                  onClick: haldelRegistration,
+                }}
+              >
+                Check In
+              </Button>
             </div>
           </CCol>
-         
         </CRow>
       </CForm>
     </CRow>
