@@ -26,6 +26,7 @@ const Front = () => {
     updateClientData,
     clientList,
     updateClientCount,
+    flag,
   } = useContext(Datacontext);
 
   const navigate = useNavigate();
@@ -55,15 +56,6 @@ const Front = () => {
     return firstChars;
   };
 
-  useEffect(() => {
-    handleRemoveData();
-    fetchQueData();
-    const interval = setInterval(() => {
-      fetchQueData();
-    }, 180000);
-    return () => clearInterval(interval);
-  }, []);
-
   const fetchQueData = async () => {
     try {
       const response = await axios.get("/dailyservice/" + store_id);
@@ -82,6 +74,11 @@ const Front = () => {
     }
   };
 
+  useEffect(() => {
+    handleRemoveData();
+    fetchQueData();
+  }, [flag]);
+
   return (
     <>
       <Header />
@@ -94,7 +91,7 @@ const Front = () => {
           </CRow>
         )}
         <CRow>
-          <CCol md={6} className="px-4"  >
+          <CCol md={6} className="px-4">
             <div className="intro-text">
               <h2>
                 <em>Welcome</em> to
@@ -103,15 +100,10 @@ const Front = () => {
                 <em>Salon</em>
               </h2>
               <div className="div-dec"></div>
-
-              
             </div>
-            <ClientSignin/>
+            <ClientSignin />
           </CCol>
-          <CCol
-            md={6}
-            className="d-flex flex-column align-items-center  "
-          >
+          <CCol md={6} className="d-flex flex-column align-items-center  ">
             <div className="text-black pt-1">
               <h2 style={{ color: "#000" }}>Waiting List</h2>
             </div>

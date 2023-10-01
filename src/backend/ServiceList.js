@@ -14,8 +14,9 @@ import {
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import DataContext from "../components/Datacontext";
 
-function ServiceList({ services, setnotification }) {
+function ServiceList({ services, setnotification, setFlag }) {
   const { auth } = useAuth();
   const [serviceData, setServiceData] = useState(services);
   const [subcategory, setSubcategory] = useState("");
@@ -27,6 +28,8 @@ function ServiceList({ services, setnotification }) {
   const access_token = auth.access_token;
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
+
+  // const { flag, setFlag } = useContext(DataContext);
 
   const handleUpdateStatus = (e, id) => {
     e.preventDefault();
@@ -66,42 +69,49 @@ function ServiceList({ services, setnotification }) {
     //   setValidated(true);
     //   console.error("Error updating status:", error);
     // }
-    const updateData = async () => {
+    const updateData = () => {
       try {
-        const response = await axios.put(
-          `/dailyservice/update/${data.id}`,
-          {
-            status,
-            subcategory,
-            comment,
-            platform,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
+        axios
+          .put(
+            `/dailyservice/update/${data.id}`,
+            {
+              status,
+              subcategory,
+              comment,
+              platform,
             },
-          }
-        );
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            const updatedServiceData = serviceData.map((service) => {
+              if (service.id === id) {
+                return {
+                  ...service,
+                  status: response.data.DailyServices.status,
+                };
+              }
+              return service;
+            });
 
-        const updatedServiceData = serviceData.map((service) => {
-          if (service.id === id) {
-            return { ...service, status: response.data.DailyServices.status };
-          }
+            setServiceData(updatedServiceData);
+            setnotification("Client data Updated");
+            setVisible(false);
+            navigate("/login/clientservice");
+          });
 
-          return service;
-        });
-
-        setServiceData(updatedServiceData);
-        setnotification("Client data Updated");
-        setVisible(false);
-        navigate("/login/clientservice");
-        window.location.reload();
+        // window.location.reload();
       } catch (err) {
         setValidated(true);
         console.error("Error updating status:", err);
       }
     };
     updateData();
+    setFlag((curr) => curr + 1);
+    // console.log(flag);
   };
 
   return (
@@ -150,7 +160,7 @@ function ServiceList({ services, setnotification }) {
         </CModalHeader>
         <CModalBody>
           <CForm
-            onSubmit={handleUpdateStatus}
+            onSubmit={(e) => handleUpdateStatus(e, data.id)}
             className="row g-3 needs-validation"
             noValidate
             validated={validated}
@@ -192,7 +202,7 @@ function ServiceList({ services, setnotification }) {
                 <option disabled>Choose...</option>
                 <option value="pending">Pending</option>
                 <option value="ongoing">Ongoing</option>
-                <option value="finished">Finished</option>
+                <option value="completed">Completed</option>
                 <option value="cancel">Cancel</option>
               </CFormSelect>
             </CCol>
