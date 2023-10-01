@@ -22,7 +22,7 @@ import "./Service.css";
 const ClientRegistration = () => {
  
   const [validated, setValidated] = useState(false);
-  const {updateClientData,fwderr,fwdcontact} = useContext(Datacontext);
+  const {store_id,updateClientData,fwderr,fwdcontact} = useContext(Datacontext);
   const [f_name, setFname] = useState('')
   const [l_name, setLname] = useState('')
   const [phone_no, setPhoneNo] = useState(fwdcontact||'')
@@ -51,6 +51,7 @@ const ClientRegistration = () => {
         l_name,
         phone_no,
         email,
+        store_id,
       })
       // Assuming your API returns a token upon successful login
       const clientsdata = response.data.client;

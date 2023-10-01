@@ -83,7 +83,7 @@ const ClientsList = () => {
 
             <CCol md={6} lg={4} key={index} className="d-flex">
               <CCol md={4}>
-                <CCardImage src={item.profile_image ? item.profile_image : defaultimg} alt={item.f_name} />
+                <img src={item.profile_image ? item.profile_image : defaultimg} alt={item.f_name} width="100px" className="mb-2"/>
               </CCol>
               <CCol md={8}>
                 <CCardBody>

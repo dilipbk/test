@@ -1,5 +1,4 @@
 import Front from "./frontend/Front";
-import ClientSignin from "./frontend/ClientSignin";
 import ProfileCard from "./frontend/ProfileCard";
 import ClientRegistration from "./frontend/ClientRegistration";
 import Register from "./components/Register";
@@ -18,7 +17,6 @@ import CRegistration from "./backend/CRegistration";
 import ClientsList from "./backend/ClientsList";
 import ClientService from "./backend/ClientService";
 import Booking from "./backend/Booking";
-import MultipleCollapses from "./backend/MultipleCollapses";
 import "./App.css";
 const ROLES = {
   User: 2001,
@@ -32,12 +30,10 @@ function App() {
       <Routes path="/">
         {/* Public routes */}
         <Route path="/" element={<Front />} />
-        <Route path="signin" element={<ClientSignin />} />
         <Route path="servicecard" element={<ProfileCard />} />
         <Route path="signup" element={<ClientRegistration />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="MultipleCollapses" element={<Booking />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* Protected routes */}

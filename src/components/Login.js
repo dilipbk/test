@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect,useContext } from "react";
 import useAuth from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import DataContext from "./Datacontext";
 import {
   CButton,
   CCard,
@@ -20,7 +21,7 @@ const LOGIN_URL = "/login";
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
-
+  const {setLocalStoreID} = useContext(DataContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -50,8 +51,11 @@ const Login = () => {
       });
       const access_token = response?.data?.access_token;
       const roles = response?.data?.user?.role;
+      const storeID = response?.data?.user?.store_id;
       setAuth({ user, pwd, roles, access_token });
       localStorage.setItem('token',JSON.stringify({'user':user, 'roles':roles, 'access_token':access_token}));
+      localStorage.setItem('STOREID',storeID);
+      setLocalStoreID(storeID);
       setUser("");
       setPwd("");
       navigate('clientservice',{ replace: true });
