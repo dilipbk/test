@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect,useContext } from "react";
+import { useRef, useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import DataContext from "./Datacontext";
@@ -21,7 +21,7 @@ const LOGIN_URL = "/login";
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
-  const {setLocalStoreID} = useContext(DataContext);
+
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -54,12 +54,10 @@ const Login = () => {
       const storeID = response?.data?.user?.store_id;
       setAuth({ user, pwd, roles, access_token });
       localStorage.setItem('token',JSON.stringify({'user':user, 'roles':roles, 'access_token':access_token}));
-      localStorage.setItem('STOREID',storeID);
-      setLocalStoreID(storeID);
       setUser("");
       setPwd("");
-      navigate('clientservice',{ replace: true });
-     // navigate(from, { replace: true });
+      navigate("clientservice", { replace: true });
+      // navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -86,7 +84,7 @@ const Login = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={5}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
@@ -103,61 +101,54 @@ const Login = () => {
                       Sign In to your account
                     </p>
                     <CInputGroup className="mb-3">
-                     
                       <CFormInput
                         type="email"
                         placeholder="Email"
                         name="email"
                         ref={userRef}
                         value={user}
+                        size="lg"
                         onChange={(e) => setUser(e.target.value)}
                         autoComplete="Email"
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
-                      
                       <CFormInput
                         type="password"
                         name="password"
                         placeholder="Password"
                         autoComplete="current-password"
                         value={pwd}
+                        size="lg"
                         onChange={(e) => setPwd(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
-                      <CCol xs={6}>
+                      <CCol xs={12}>
                         <CButton
                           color="primary"
-                          className="px-4"
+                          className="px-4 mb-2 w-100"
+                          size="lg"
+                          color="dark"
+                          shape="rounded-0"
                           onClick={handleSubmit}
                         >
                           Login
                         </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
-                      </CCol>
+
                       <div className="persistCheck">
-                    <input
-                        type="checkbox"
-                        id="persist"
-                        onChange={togglePersist}
-                        checked={persist}
-                    />
-                    <label htmlFor="persist">Trust This Device</label>
-                </div>
+                        <input
+                          type="checkbox"
+                          id="persist"
+                          onChange={togglePersist}
+                          checked={persist}
+                        />
+                        <label htmlFor="persist">Trust This Device</label>
+                      </div>
                     </CRow>
                   </CForm>
                 </CCardBody>
-              </CCard>
-              <CCard
-                className="text-white bg-primary py-5 d-sm-none d-md-block"
-                style={{ width: "44%" }}
-              >
-                
               </CCard>
             </CCardGroup>
           </CCol>

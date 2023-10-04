@@ -14,21 +14,22 @@ import {
 } from "@coreui/react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import DataContext from "../components/Datacontext";
+import { useEffect } from "react";
 
-function ServiceList({ services,setnotification }) {
+function ServiceList({ services, setnotification }) {
   const { auth } = useAuth();
   const [serviceData, setServiceData] = useState(services);
-  const [subcategory, setSubcategory] = useState('')
-  const [comment, setComment] = useState('')
-  const [status, setStatus] = useState('')
-  const [platform, setPlatform] = useState('')
+  const [subcategory, setSubcategory] = useState("");
+  const [comment, setComment] = useState("");
+  const [status, setStatus] = useState("");
+  const [platform, setPlatform] = useState("");
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState({});
   const access_token = auth.access_token;
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
- 
 
   const handleUpdateStatus = async (id) => {
     try {
@@ -44,8 +45,9 @@ function ServiceList({ services,setnotification }) {
           Authorization: `Bearer ${access_token}`,
         },
       }
-      ).then((response) => {
-         // Update the serviceData state with the new status
+      );
+
+      // Update the serviceData state with the new status
       const updatedServiceData = serviceData.map((service) => {
         if (service.id === id) {
           return { ...service, status: response.data.DailyServices.status };
@@ -56,16 +58,16 @@ function ServiceList({ services,setnotification }) {
       setServiceData(updatedServiceData);
       setnotification("Client data Updated");
       setVisible(false);
-      navigate('/login/clientservice')
-      });
-      
 
-     
+        // window.location.reload();
+      } catch (err) {
+        setValidated(true);
+        console.error("Error updating status:", err);
+      }
+    };
+    updateData();
 
-    } catch (error) {
-      setValidated(true);
-      console.error("Error updating status:", error);
-    }
+    // console.log(flag);
   };
 
   return (
@@ -88,10 +90,15 @@ function ServiceList({ services,setnotification }) {
               </td>
               <td>{service.status}</td>
               <td>
-                <CButton onClick={() => {setVisible(!visible); setData({id:service.id,service:service.service})}}>
-                 Action
+                <CButton
+                  onClick={() => {
+                    setVisible(!visible);
+                    setData({ id: service.id, service: service.service });
+                  }}
+                  color="dark"
+                >
+                  Action
                 </CButton>
-               
               </td>
             </tr>
           ))}
@@ -104,14 +111,13 @@ function ServiceList({ services,setnotification }) {
         scrollable
         visible={visible}
         onClose={() => setVisible(false)}
-       
       >
         <CModalHeader>
           <CModalTitle>Service Setting ({data.service})</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CForm className="row g-3 needs-validation"  noValidate
-                validated={validated}>
+                validated={validated} onSubmit={handleUpdateStatus}>
             <CCol md={6}>
               <CFormInput
                 type="text"
@@ -122,7 +128,12 @@ function ServiceList({ services,setnotification }) {
               />
             </CCol>
             <CCol md={3}>
-              <CFormSelect id="validationDefault02" label="Platform" onChange={(e) => setPlatform(e.target.value)} required>
+              <CFormSelect
+                id="validationDefault02"
+                label="Platform"
+                onChange={(e) => setPlatform(e.target.value)}
+                required
+              >
                 <option disabled>Choose...</option>
                 <option value="website">Website</option>
                 <option value="groupon">Groupon</option>
@@ -132,29 +143,34 @@ function ServiceList({ services,setnotification }) {
                 <option value="yelp">Yelp</option>
                 <option value="other">Other</option>
               </CFormSelect>
-            </CCol>                
-            
+            </CCol>
+
             <CCol md={3}>
-              <CFormSelect id="validationDefault03" label="Status" onChange={(e) => setStatus(e.target.value)} required>
+              <CFormSelect
+                id="validationDefault03"
+                label="Status"
+                onChange={(e) => setStatus(e.target.value)}
+                required
+              >
                 <option disabled>Choose...</option>
                 <option value="pending">Pending</option>
                 <option value="ongoing">Ongoing</option>
-                <option value="finished">Finished</option>
+                <option value="completed">Completed</option>
                 <option value="cancel">Cancel</option>
               </CFormSelect>
             </CCol>
             <CCol md={12}>
-            <CFormTextarea
-              id="service-detals"
-              label="Service Details"
-              rows={3}
-              text="Must be 8-20 words long."
-              onChange={(e) => setComment(e.target.value)}
-            ></CFormTextarea>
+              <CFormTextarea
+                id="service-detals"
+                label="Service Details"
+                rows={3}
+                text="Must be 8-20 words long."
+                onChange={(e) => setComment(e.target.value)}
+              ></CFormTextarea>
             </CCol>
-            
+
             <CCol xs={12}>
-              <CButton color="primary" type="button"  onClick={handleUpdateStatus}>
+              <CButton color="primary" type="submit">
                 Submit
               </CButton>
             </CCol>

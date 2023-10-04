@@ -17,6 +17,8 @@ import {
 import "./Service.css";
 import LogoImg from "../assets/images/diamond-threading-salaon-logo.png";
 import Datacontext from "../components/Datacontext";
+// import { Button } from "@coreui/coreui";
+import Button from "../components/Globals/Button";
 
 const ClientSignin = () => {
   const { updateClientData, fwderr, setFwderror, setFwdContact } =
@@ -68,40 +70,37 @@ const ClientSignin = () => {
       <CForm className="g-3 needs-validation" noValidate validated={validated}>
         {error && <div style={{ color: "red" }}>{error}</div>}
 
-        <CRow>
-          <CCol md={12} lg={6}>
-            <CFormFloating className="mb-3">
-              <CFormInput
-                type="text"
-                id="contactnumber"
-                placeholder="Mobile Number"
-                name="phone_no"
-                value={phone_no}
-                onChange={handleNumberChange}
-                autoComplete="number"
-                feedbackInvalid="Please provide a valid Nunber."
-                required
-              />
-              <CFormLabel htmlFor="contactnumber">Mobile Number</CFormLabel>
-            </CFormFloating>
-          </CCol>
-       
-          <CCol md={12} lg={6} >
-          <div className="d-grid">
-            <CButton
-              size="lg"
-              color="primary"
-              style={{padding:"12px 0px"}}
-              onClick={haldelRegistration}
-            >
-              CHECK IN
-            </CButton>
-            </div>
-          </CCol>
-         
-        </CRow>
-      </CForm>
-    </CRow>
+                <CRow>
+                  <CCol>
+                  <CFormFloating className="mb-3">
+                      <CFormInput
+                        type="text"
+                        id="contactnumber"
+                        placeholder="Mobile Number"
+                        name="phone_no"
+                        value={phone_no}
+                        onChange={handleNumberChange}
+                        autoComplete="number"
+                        feedbackInvalid="Please provide a valid Nunber."
+                        required
+                      />
+                      <CFormLabel htmlFor="contactnumber">Mobile Number</CFormLabel>
+                    </CFormFloating>
+                  </CCol>
+                </CRow>
+                
+                <CRow>
+                  <CCol xs={12} className="mt-2">
+                    <CButton size="lg" color="primary" className=" px-5" onClick={haldelRegistration}>NEXT</CButton>
+                  </CCol>
+                  <p className="mt-3">Not Register yet?  <Link to="/signup">Register here</Link></p>
+                </CRow>
+              </CForm>
+            </CRow>
+          </CCardBody>
+        </CCard>
+      </CContainer>
+    </>
   );
 };
 

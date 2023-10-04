@@ -18,6 +18,7 @@ import ClientsList from "./backend/ClientsList";
 import ClientService from "./backend/ClientService";
 import Booking from "./backend/Booking";
 import "./App.css";
+import URegistration from "./backend/URegistration";
 const ROLES = {
   User: 2001,
   Editor: 1984,
@@ -44,6 +45,7 @@ function App() {
               <Route path="login/clientregister" element={<CRegistration />} />
               <Route path="login/clientservice" element={<ClientService />} />
               <Route path="login/booking" element={<Booking />} />
+              <Route path="login/userregister" element={<URegistration />} />
             </Route>
 
             {/* For future use */}

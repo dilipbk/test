@@ -75,6 +75,11 @@ const AppHeader = () => {
                 </Link>
               </CNavItem>
               <CNavItem>
+                <Link to="/login/userregister" className="nav-link">
+                  User Register
+                </Link>
+              </CNavItem>
+              <CNavItem>
                 <Link to="/login/booking" className="nav-link">
                   Booking
                 </Link>

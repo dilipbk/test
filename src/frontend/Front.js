@@ -26,6 +26,7 @@ const Front = () => {
     updateClientData,
     clientList,
     updateClientCount,
+    flag,
   } = useContext(Datacontext);
 
   const navigate = useNavigate();
@@ -58,29 +59,35 @@ const Front = () => {
   useEffect(() => {
     handleRemoveData();
     fetchQueData();
-    const interval = setInterval(() => {
+    const interval =  setInterval(()=>{
       fetchQueData();
-    }, 180000);
+    },180000)
     return () => clearInterval(interval);
   }, []);
-
-  const fetchQueData = async () => {
-    try {
-      const response = await axios.get("/dailyservice/" + store_id);
-      updateClientList(response.data.dailyservices);
-      updateClientCount(response.data.dailyservices.length);
-    } catch (error) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Data");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("no data found");
+  
+  
+    const fetchQueData = async () => {
+      try {
+        const response = await axios.get("/dailyservice/"+store_id);
+        updateClientList(response.data.dailyservices);
+        updateClientCount(response.data.dailyservices.length);
+      } catch (error) {
+          if (!err?.response) {
+            setErrMsg("No Server Response");
+          } else if (err.response?.status === 400) {
+            setErrMsg("Missing Data");
+          } else if (err.response?.status === 401) {
+            setErrMsg("Unauthorized");
+          } else {
+            setErrMsg("no data found");
+          }
       }
-    }
-  };
+    };
+
+  useEffect(() => {
+    handleRemoveData();
+    fetchQueData();
+  }, [flag]);
 
   return (
     <>
@@ -94,7 +101,7 @@ const Front = () => {
           </CRow>
         )}
         <CRow>
-          <CCol md={6} className="px-4"  >
+          <CCol md={6} className="d-flex align-items-center introsection ">
             <div className="intro-text">
               <h2>
                 <em>Welcome</em> to
@@ -104,19 +111,28 @@ const Front = () => {
               </h2>
               <div className="div-dec"></div>
 
-              
+              <div className="buttons">
+                <div>
+                  <Link
+                    size="lg"
+                    className="btn btn-primary btn-lg px-5 py-3"
+                    to="/signin"
+                  >
+                    Check In
+                  </Link>
+                </div>
+              </div>
             </div>
-            <ClientSignin/>
           </CCol>
           <CCol
             md={6}
-            className="d-flex flex-column align-items-center  "
+            className="d-flex flex-column align-items-center introsection "
           >
-            <div className="text-black pt-1">
-              <h2 style={{ color: "#000" }}>Waiting List</h2>
-            </div>
-
-            {clientList.length > 0 && (
+             <div className="text-black pt-1">
+                <h2 style={{'color':'#000'}}>Waiting List</h2>
+              </div>
+            
+            {clientList.length >0 && (
               <CListGroup flush className="nameListque">
                 {clientList.map((Services, index) => (
                   <CListGroupItem
