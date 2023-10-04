@@ -10,49 +10,46 @@ import {
   CRow,
   CFormFloating,
   CFormCheck,
-} from '@coreui/react'
-import axios from '../api/axios'
-import React, { useState,useContext } from 'react'
-import './ClientRegistration.css'
-import { useNavigate } from 'react-router-dom'
+} from "@coreui/react";
+import axios from "../api/axios";
+import React, { useState, useContext } from "react";
+import "./ClientRegistration.css";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import DataContext from '../components/Datacontext'
+import DataContext from "../components/Datacontext";
 
 const CRegistration = () => {
-  const {store_id} =useContext(DataContext);
+  const { store_id } = useContext(DataContext);
   const { auth } = useAuth();
-  const [f_name, setFname] = useState('');
-  const [l_name, setLname] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone_no, setPhoneNo] = useState('');
-  const [street, setStreet] = useState('');
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
-  const [zipcode, setZipcode] = useState('');
+  const [f_name, setFname] = useState("");
+  const [l_name, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone_no, setPhoneNo] = useState("");
+  const [street, setStreet] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [zipcode, setZipcode] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const access_token = auth.access_token;
-  const apiUrl = '/client/store'
+  const apiUrl = "/client/store";
 
   const handleNumberChange = (event) => {
-   
-    const input = event.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    const input = event.target.value.replace(/\D/g, ""); // Remove non-digit characters
     if (input.length <= 10) {
       setPhoneNo(event.target.value);
     }
   };
 
-
-
   const headerConfig = {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-  }
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
-    setError('')
+    event.preventDefault();
+    setError("");
     // Handle form submission here, e.g., sending data to a server
     try {
       const response = await axios.post(
@@ -68,21 +65,21 @@ const CRegistration = () => {
           zipcode,
           store_id,
         },
-        headerConfig,
-      )
+        headerConfig
+      );
 
-      navigate('/login/home')
+      navigate("/login/home");
     } catch (error) {
-      setError('Please fill the required fields')
-      console.error('Login Error:', error)
+      setError("Please fill the required fields");
+      console.error("Login Error:", error);
     }
-  }
+  };
 
   return (
     <CCard>
       <CCardHeader>Client Registration</CCardHeader>
       <CCardBody>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div style={{ color: "red" }}>{error}</div>}
         <CForm onSubmit={handleSubmit}>
           <CFormLabel>Personal Details</CFormLabel>
           <CRow>
@@ -196,11 +193,17 @@ const CRegistration = () => {
                 <CFormLabel htmlFor="street">Zip-code</CFormLabel>
               </CFormFloating>
             </CCol>
-          </CRow>          
-          
+          </CRow>
+
           <CRow>
             <CCol>
-              <CButton type="submit" color="primary" >
+              <CButton
+                type="submit"
+                color="dark"
+                className="px-4 mt-2"
+                size="lg"
+                shape="rounded-0"
+              >
                 Register
               </CButton>
             </CCol>
@@ -208,7 +211,7 @@ const CRegistration = () => {
         </CForm>
       </CCardBody>
     </CCard>
-  )
-}
+  );
+};
 
-export default CRegistration
+export default CRegistration;

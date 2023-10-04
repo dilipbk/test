@@ -12,6 +12,7 @@ import {
   CNavLink,
   CTabPane,
   CTabContent,
+  CButton,
 } from "@coreui/react";
 import axios from "../api/axios";
 import ServiceList from "./ServiceList";
@@ -22,17 +23,24 @@ import DataContext from "../components/Datacontext";
 const ClientService = () => {
   const { auth } = useAuth();
   const { store_id } = useContext(DataContext);
-  const { setFlag } = useContext(DataContext);
+
   const [data, setData] = useState([]);
   const [finishedData, setFinishedData] = useState([]);
   const access_token = auth.access_token;
   const [notification, setnotification] = useState("");
   const [activeKey, setActiveKey] = useState(1);
 
+  const [reload, setReload] = useState(false);
+
+  const handleReload = () => {
+    setReload((state) => !state);
+    console.log(reload);
+  };
+
   useEffect(() => {
     fetchData();
     fetchFinishedData();
-  }, [activeKey]);
+  }, [activeKey, reload]);
   const NameCombine = (str) => {
     const firstChars = str
       .split(" ")
@@ -78,8 +86,15 @@ const ClientService = () => {
           </CRow>
         )}
         <CRow className="w-100">
-          <CCol md={12}>
-            <h3>Customer List</h3>
+          <CCol
+            className="d-flex justify-content-between align-items-center"
+            md={8}
+          >
+            <h3>Customer Quelist</h3>
+
+            <CButton size="sm" color="dark" onClick={handleReload}>
+              Reload
+            </CButton>
           </CCol>
           <CCol md={12}>
             <CNav variant="tabs" role="tablist">
@@ -156,7 +171,6 @@ const ClientService = () => {
                         <ServiceList
                           services={item.services}
                           setnotification={setnotification}
-                          setFlag={setFlag}
                         />
                       </CListGroupItem>
                     ))}
@@ -212,7 +226,6 @@ const ClientService = () => {
                         <ServiceList
                           services={item.services}
                           setnotification={setnotification}
-                          setFlag={setFlag}
                         />
                       </CListGroupItem>
                     ))}

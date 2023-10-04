@@ -15,8 +15,9 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import DataContext from "../components/Datacontext";
+import { useEffect } from "react";
 
-function ServiceList({ services, setnotification, setFlag }) {
+function ServiceList({ services, setnotification }) {
   const { auth } = useAuth();
   const [serviceData, setServiceData] = useState(services);
   const [subcategory, setSubcategory] = useState("");
@@ -99,6 +100,9 @@ function ServiceList({ services, setnotification, setFlag }) {
 
             setServiceData(updatedServiceData);
             setnotification("Client data Updated");
+            const timeout = setTimeout(() => {
+              setnotification("");
+            }, 3000);
             setVisible(false);
             navigate("/login/clientservice");
           });
@@ -110,7 +114,7 @@ function ServiceList({ services, setnotification, setFlag }) {
       }
     };
     updateData();
-    setFlag((curr) => curr + 1);
+
     // console.log(flag);
   };
 
