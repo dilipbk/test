@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CAvatar,
   CListGroupItem,
@@ -13,9 +14,10 @@ import "./Front.css";
 import { Link } from "react-router-dom";
 import Datacontext from "../components/Datacontext";
 import axios from "../api/axios";
+import ClientSignin from "./ClientSignin";
 
 const Front = () => {
-  const [err, setErrMsg] = useState('');
+  const [err, setErrMsg] = useState("");
   const {
     store_id,
     fwderr,
@@ -25,7 +27,17 @@ const Front = () => {
     clientList,
     updateClientCount,
   } = useContext(Datacontext);
-  
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the value with key "STOREID" exists in local storage
+    if (!store_id) {
+      // If it doesn't exist, redirect to the login component
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const handleRemoveData = () => {
     // Remove an item from local storage
     localStorage.removeItem("clientsdata");
@@ -46,30 +58,29 @@ const Front = () => {
   useEffect(() => {
     handleRemoveData();
     fetchQueData();
-    const interval =  setInterval(()=>{
+    const interval = setInterval(() => {
       fetchQueData();
-    },180000)
+    }, 180000);
     return () => clearInterval(interval);
   }, []);
-  
-  
-    const fetchQueData = async () => {
-      try {
-        const response = await axios.get("/dailyservice/"+store_id);
-        updateClientList(response.data.dailyservices);
-        updateClientCount(response.data.dailyservices.length);
-      } catch (error) {
-          if (!err?.response) {
-            setErrMsg("No Server Response");
-          } else if (err.response?.status === 400) {
-            setErrMsg("Missing Data");
-          } else if (err.response?.status === 401) {
-            setErrMsg("Unauthorized");
-          } else {
-            setErrMsg("no data found");
-          }
+
+  const fetchQueData = async () => {
+    try {
+      const response = await axios.get("/dailyservice/" + store_id);
+      updateClientList(response.data.dailyservices);
+      updateClientCount(response.data.dailyservices.length);
+    } catch (error) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Data");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("no data found");
       }
-    };
+    }
+  };
 
   return (
     <>
@@ -83,7 +94,7 @@ const Front = () => {
           </CRow>
         )}
         <CRow>
-          <CCol md={6} className="d-flex align-items-center introsection ">
+          <CCol md={6} className="px-4"  >
             <div className="intro-text">
               <h2>
                 <em>Welcome</em> to
@@ -93,28 +104,19 @@ const Front = () => {
               </h2>
               <div className="div-dec"></div>
 
-              <div className="buttons">
-                <div>
-                  <Link
-                    size="lg"
-                    className="btn btn-primary btn-lg px-5 py-3"
-                    to="/signin"
-                  >
-                    Check In
-                  </Link>
-                </div>
-              </div>
+              
             </div>
+            <ClientSignin/>
           </CCol>
           <CCol
             md={6}
-            className="d-flex flex-column align-items-center introsection "
+            className="d-flex flex-column align-items-center  "
           >
-             <div className="text-black pt-1">
-                <h2 style={{'color':'#000'}}>Waiting List</h2>
-              </div>
-            
-            {clientList.length >0 && (
+            <div className="text-black pt-1">
+              <h2 style={{ color: "#000" }}>Waiting List</h2>
+            </div>
+
+            {clientList.length > 0 && (
               <CListGroup flush className="nameListque">
                 {clientList.map((Services, index) => (
                   <CListGroupItem
@@ -134,11 +136,10 @@ const Front = () => {
                         <CAvatar color="secondary" status="danger" size="xl">
                           {NameCombine(Services.f_name + " " + Services.l_name)}
                         </CAvatar>
-                        
+
                         <span
                           className="ms-md-auto displaytext rounded-circle border d-flex justify-content-center align-items-center"
                           style={{
-                            
                             width: "60px",
                             height: "60px",
                           }}
@@ -150,7 +151,6 @@ const Front = () => {
                   </CListGroupItem>
                 ))}
               </CListGroup>
-           
             )}
           </CCol>
         </CRow>

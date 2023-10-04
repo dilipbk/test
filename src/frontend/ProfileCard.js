@@ -18,7 +18,7 @@ import "./ProfileCard.css";
 
 const ProfileCard = () => {
   const navigate = useNavigate();
-  const {store_id,setFwderror,clientdata, updateClientData,updateClientList,updateClientCount} = useContext(Datacontext);
+  const {store_id,setFwderror,clientdata, updateClientData} = useContext(Datacontext);
   if(!clientdata){
     navigate('/')
   }
@@ -112,7 +112,7 @@ const ProfileCard = () => {
    
         <CRow className="w-100 ">
           
-          <CCol md={8} xl={9}>
+          <CCol md={12} xl={12}>
             <CRow>
               {Services.map((Services, index) => (
                 <CCol md={4} lg={4} sm={6} key={index} className="mb-3">
@@ -137,40 +137,19 @@ const ProfileCard = () => {
               ))}
             </CRow>
           </CCol>
-          <CCol md={4} xl={3}>
+          <CCol md={12} xl={12}>
           {selectedServices.length > 0 && (
-                <CCard className="p-3 col-md-12">
-                  <h3>Selected Services</h3>
-                  <CListGroup>
-                    {selectedServices.map((Services, index) => (
-                      <CListGroupItem
-                        key={index}
-                        className="d-flex justify-content-between align-items-center"
-                      >
-                        <div className="d-flex align-items-center">                          
-                          <span className="ps-1 text-capitalize fw-bold ">
-                            {Services.service}
-                          </span>
-                        </div>
-                        <CButton
-                          color="danger"
-                          size="sm"
-                          className="float-right"
-                          onClick={() => handleRemoveServices(Services)}
-                        >
-                          X
-                        </CButton>
-                      </CListGroupItem>
-                    ))}
-                  </CListGroup>
+               
+              
                   <CButton
+                    size="lg"
                     color="primary"
                     onClick={handleCheckout}
-                    className="mt-3"
+                    className="mt-3 px-4 py-3" 
                   >
                     CHECK IN
                   </CButton>
-                </CCard>
+              
               )}
           </CCol>
         </CRow>

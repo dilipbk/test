@@ -13,19 +13,14 @@ import {
   COffcanvasTitle,
   CCloseButton,
   COffcanvasBody,
-  CDropdown,
-  CFormCheck,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownToggle,
 } from "@coreui/react";
-import DataContext from "../../components/Datacontext";
 import salonLogo from "../../assets/images/diamond-threading-salaon-logo.png";
+import useAuth from "../../hooks/useAuth";
 
 const AppHeader = () => {
   const navigate = useNavigate();
   const logout = useLogout();
-  const { setLocalStoreID } = useContext(DataContext);
+  const { auth } = useAuth();
 
   const signOut = async () => {
     await logout();
@@ -33,21 +28,6 @@ const AppHeader = () => {
   };
 
   const [visible, setVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(
-    localStorage.getItem("STOREID") || ""
-  );
-
-  // Function to handle radio button click
-  const handleRadioButtonClick = (event) => {
-    const { value } = event.target;
-
-    // Update the selected value in the component's state
-    setSelectedValue(value);
-    setLocalStoreID(value);
-
-    // Store the selected value in localStorage
-    localStorage.setItem("STOREID", value);
-  };
 
   return (
     <CNavbar className="bg-pink">
@@ -69,12 +49,15 @@ const AppHeader = () => {
         >
           <COffcanvasHeader>
             <COffcanvasTitle>Admin Menu</COffcanvasTitle>
+
             <CCloseButton
               className="text-reset"
               onClick={() => setVisible(false)}
             />
           </COffcanvasHeader>
+
           <COffcanvasBody>
+            <p>{auth?.user}</p>
             <CNavbarNav>
               <CNavItem>
                 <Link to="/login/clientservice" className="nav-link">
@@ -106,38 +89,6 @@ const AppHeader = () => {
                 <button onClick={signOut} className="btn btn-warning">
                   Sign Out
                 </button>
-              </CNavItem>
-              <CNavItem className="mt-3">
-                <CDropdown>
-                  <CDropdownToggle color="info">
-                   Store Setting
-                  </CDropdownToggle>
-                  <CDropdownMenu>
-                    <CDropdownItem>
-                      <CFormCheck
-                        type="radio"
-                        name="setStore"
-                        id="flexRadioDefault1"
-                        label="Dallas"
-                        value="1"
-                        checked={selectedValue === "1"}
-                        onChange={handleRadioButtonClick}
-                        className="mr-2"
-                      />
-                    </CDropdownItem>
-                    <CDropdownItem>
-                      <CFormCheck
-                        type="radio"
-                        name="setStore"
-                        id="flexRadioDefault2"
-                        label="Grand Parirer "
-                        value="2"
-                        checked={selectedValue === "2"}
-                        onChange={handleRadioButtonClick}
-                      />
-                    </CDropdownItem>
-                  </CDropdownMenu>
-                </CDropdown>
               </CNavItem>
             </CNavbarNav>
           </COffcanvasBody>

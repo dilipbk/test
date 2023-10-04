@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import {
-
   CButton,
   CModal,
   CModalHeader,
@@ -11,6 +10,7 @@ import {
   CFormInput,
   CFormSelect,
   CFormTextarea,
+
 } from "@coreui/react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
@@ -28,6 +28,7 @@ function ServiceList({ services,setnotification }) {
   const access_token = auth.access_token;
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
+ 
 
   const handleUpdateStatus = async (id) => {
     try {
@@ -43,9 +44,8 @@ function ServiceList({ services,setnotification }) {
           Authorization: `Bearer ${access_token}`,
         },
       }
-      );
-
-      // Update the serviceData state with the new status
+      ).then((response) => {
+         // Update the serviceData state with the new status
       const updatedServiceData = serviceData.map((service) => {
         if (service.id === id) {
           return { ...service, status: response.data.DailyServices.status };
@@ -56,6 +56,11 @@ function ServiceList({ services,setnotification }) {
       setServiceData(updatedServiceData);
       setnotification("Client data Updated");
       setVisible(false);
+      navigate('/login/clientservice')
+      });
+      
+
+     
 
     } catch (error) {
       setValidated(true);
@@ -106,7 +111,7 @@ function ServiceList({ services,setnotification }) {
         </CModalHeader>
         <CModalBody>
           <CForm className="row g-3 needs-validation"  noValidate
-                validated={validated} onSubmit={handleUpdateStatus}>
+                validated={validated}>
             <CCol md={6}>
               <CFormInput
                 type="text"
@@ -149,7 +154,7 @@ function ServiceList({ services,setnotification }) {
             </CCol>
             
             <CCol xs={12}>
-              <CButton color="primary" type="submit">
+              <CButton color="primary" type="button"  onClick={handleUpdateStatus}>
                 Submit
               </CButton>
             </CCol>

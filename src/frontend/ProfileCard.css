@@ -3,3 +3,4 @@
 .service-input:hover{background-color:#e7e7e7 !important;}
 .service-input .card-body{display:flex; justify-content:  center; align-items: center;}
 .service-input .card-img{padding:15px; border: 1px solid #c1c1c1 !important}
+.card.selected {background-color: #c9c9c9 !important ;}
