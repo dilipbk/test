@@ -20,51 +20,65 @@ const URegistration = () => {
     f_name: "",
     l_name: "",
     phone_no: "",
+    full_name: "",
   });
 
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
 
+  const validateField = (name, value) => {
+    if (name === "f_name") {
+      if (!value) {
+        return "First Name is required";
+      } else if (!/^[A-Za-z]+$/.test(value)) {
+        return "First Name should contain only alphabets";
+      }
+    } else if (name === "l_name") {
+      if (!value) {
+        return "Last Name is required";
+      } else if (!/^[A-Za-z]+$/.test(value)) {
+        return "Last Name should contain only alphabets";
+      }
+    } else if (name === "phone_no") {
+      if (!value) {
+        return "Phone Number is required";
+      } else if (!/^[0-9]+$/.test(value) || value.length !== 10) {
+        return "Phone Number should be 10 digits and contain only digits";
+      }
+    }
+    return "";
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const full_name = formData.f_name + " " + formData.l_name;
+    const validationError = validateField(name, value);
+    setErrors({ ...errors, [name]: validationError });
+    setFormData({ ...formData, [name]: value, full_name });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Validation logic on form submit
-    const validationErrors = {};
 
-    if (!formData.f_name) {
-      validationErrors.f_name = "First Name is required";
-    } else if (!/^[A-Za-z]+$/.test(formData.f_name)) {
-      validationErrors.f_name = "First Name should contain only alphabets";
+    const fieldErrors = {};
+    for (const name in formData) {
+      const validationError = validateField(name, formData[name]);
+      if (validationError) {
+        fieldErrors[name] = validationError;
+      }
     }
 
-    if (!formData.l_name) {
-      validationErrors.l_name = "Last Name is required";
-    } else if (!/^[A-Za-z]+$/.test(formData.l_name)) {
-      validationErrors.l_name = "Last Name should contain only alphabets";
-    }
+    setErrors(fieldErrors);
 
-    if (!formData.phone_no) {
-      validationErrors.phone_no = "Phone Number is required";
-    } else if (
-      !/^[0-9]+$/.test(formData.phone_no) ||
-      formData.phone_no.length !== 10
-    ) {
-      validationErrors.phone_no =
-        "Phone Number should be 10 digits and contain only digits";
-    }
-
-    if (Object.keys(validationErrors).length === 0) {
+    if (Object.keys(fieldErrors).length === 0) {
       setError("");
+      setFormData({
+        ...formData,
+        full_name: `${formData.f_name} ${formData.l_name}`,
+      });
     } else {
-      setErrors(validationErrors);
       setError("Please correct the errors in the form.");
+      return;
     }
   };
 
@@ -107,6 +121,12 @@ const URegistration = () => {
                 <CFormLabel htmlFor="lastname">Last name</CFormLabel>
               </CFormFloating>
             </CCol>
+            <CFormInput
+              type="hidden"
+              id="fullname"
+              name="full_name"
+              value={formData.full_name}
+            />
           </CRow>
 
           <CRow>
@@ -120,7 +140,7 @@ const URegistration = () => {
                   value={formData.phone_no}
                   onChange={handleInputChange}
                 />
-                {errors.l_name && (
+                {errors.phone_no && (
                   <p style={{ color: "red" }}>{errors.phone_no}</p>
                 )}
                 <CFormLabel htmlFor="mobile_number">Mobile Number</CFormLabel>

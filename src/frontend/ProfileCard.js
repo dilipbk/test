@@ -19,9 +19,10 @@ import Button from "../components/Globals/Button";
 
 const ProfileCard = () => {
   const navigate = useNavigate();
-  const {store_id,setFwderror,clientdata, updateClientData,updateClientList,updateClientCount} = useContext(Datacontext);
-  if(!clientdata){
-    navigate('/')
+  const { store_id, setFwderror, clientdata, updateClientData } =
+    useContext(Datacontext);
+  if (!clientdata) {
+    navigate("/");
   }
 
   const [Services, setItems] = useState([]);
@@ -48,28 +49,6 @@ const ProfileCard = () => {
       console.error("Error fetching client list:", error);
     }
   };
-
-  // const handleCardClick = (clickedService) => {
-  //   const isSelected = selectedServices.some(
-  //     (service) => service.service === clickedService.service
-  //   );
-
-  //   console.log(isSelected);
-
-  //   if (!isSelected) {
-  //     setSelectedServices((prevSelected) => [
-  //       ...prevSelected,
-  //       {
-  //         image: clickedService.image,
-  //         service: clickedService.service,
-  //         client_id: clientdata.id,
-  //         store_id: store_id,
-  //       },
-  //     ]);
-  //     console.log(selectedServices);
-  //   }
-  // };
-
   const handleCardClick = (clickedService) => {
     const isSelected = selectedServices.some(
       (service) => service.service === clickedService.service
@@ -89,6 +68,7 @@ const ProfileCard = () => {
         {
           image: clickedService.image,
           service: clickedService.service,
+          service_id:clickedService.id,
           client_id: clientdata.id,
           store_id: store_id,
         },
@@ -96,19 +76,7 @@ const ProfileCard = () => {
     }
   };
 
-  const handleRemoveServices = (Services) => {
-    setSelectedServices((prevSelected) =>
-      prevSelected.filter((item) => item !== Services)
-    );
-  };
-  const NameCombine = (str) => {
-    const firstChars = str
-      .split(" ")
-      .map((word) => word[0])
-      .join("");
-
-    return firstChars;
-  };
+ 
   const removeLocalStorage = () => {
     updateClientData([]);
     localStorage.removeItem("clientsdata");
@@ -140,8 +108,7 @@ const ProfileCard = () => {
         </CRow>
 
         <CRow className="w-100 ">
-          
-          <CCol md={8} xl={9}>
+          <CCol md={12} xl={12}>
             <CRow>
               {Services.map((Services, index) => (
                 <CCol md={4} lg={4} sm={6} key={index} className="mb-3">
@@ -167,41 +134,19 @@ const ProfileCard = () => {
               ))}
             </CRow>
           </CCol>
-          <CCol md={4} xl={3}>
-          {selectedServices.length > 0 && (
-                <CCard className="p-3 col-md-12">
-                  <h3>Selected Services</h3>
-                  <CListGroup>
-                    {selectedServices.map((Services, index) => (
-                      <CListGroupItem
-                        key={index}
-                        className="d-flex justify-content-between align-items-center"
-                      >
-                        <div className="d-flex align-items-center">                          
-                          <span className="ps-1 text-capitalize fw-bold ">
-                            {Services.service}
-                          </span>
-                        </div>
-                        <CButton
-                          color="danger"
-                          size="sm"
-                          className="float-right"
-                          onClick={() => handleRemoveServices(Services)}
-                        >
-                          X
-                        </CButton>
-                      </CListGroupItem>
-                    ))}
-                  </CListGroup>
-                  <CButton
-                    color="primary"
-                    onClick={handleCheckout}
-                    className="mt-3"
-                  >
-                    CHECK IN
-                  </CButton>
-                </CCard>
-              )}
+          <CCol md={12} xl={12}>
+            {selectedServices.length > 0 && (
+              <Button
+                options={{
+                  size: "lg",
+
+                  onClick: handleCheckout,
+                  className: "mt-3 px-5 py-3 ",
+                }}
+              >
+                CHECK IN
+              </Button>
+            )}
           </CCol>
         </CRow>
       </CContainer>
