@@ -13,6 +13,12 @@ import {
   COffcanvasTitle,
   CCloseButton,
   COffcanvasBody,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem
+
+
 } from "@coreui/react";
 import salonLogo from "../../assets/images/diamond-threading-salaon-logo.png";
 import useAuth from "../../hooks/useAuth";
@@ -59,6 +65,20 @@ const AppHeader = () => {
           <COffcanvasBody>
             <p>{auth?.user}</p>
             <CNavbarNav>
+              <CNavItem>
+                <Link to="/login/store" className="nav-link">
+                  Store
+                </Link>
+              </CNavItem>
+              
+              <CDropdown variant="nav-item" popper={false}>
+              <CDropdownToggle color="secondary">Service</CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem href="/login/service">Service List</CDropdownItem>
+                <CDropdownItem href="/login/service-category">Service Category</CDropdownItem>
+                
+              </CDropdownMenu>
+            </CDropdown>
               <CNavItem>
                 <Link to="/login/clientservice" className="nav-link">
                   Que List

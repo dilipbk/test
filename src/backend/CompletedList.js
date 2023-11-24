@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { CButton, CFormInput } from "@coreui/react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import DataContext from "../components/Datacontext";
+
 import { useEffect } from "react";
 
-function CompletedList({ services, setnotification, setError }) {
+function CompletedList({ services, setError }) {
   const { auth } = useAuth();
   const [serviceData, setServiceData] = useState(services);
 
@@ -41,21 +40,20 @@ function CompletedList({ services, setnotification, setError }) {
   const calculatePrice = (pricerate, discount) => {
     const priceRateNumber = parseFloat(pricerate);
     const discountedPrice = parseFloat(discount);
-    const discountPercentage =
-      ((priceRateNumber - discountedPrice) / priceRateNumber) * 100;
+    const discountPercentage = discount
+      ? ((priceRateNumber - discountedPrice) / priceRateNumber) * 100
+      : 0;
 
-    if (discountPercentage && discount) {
-      if (discountPercentage > 20) {
-        setError("You can't give discount of more than 20%");
-        return discountPercentage.toFixed(2);
-      } else setError("");
-      return discountPercentage.toFixed(2);
+    if (discountPercentage > 20) {
+      setError("You cannot give discount of more than 20%");
+      setTimeout(() => {
+        setError("");
+      }, 2000);
+
+      return "invalid";
     }
 
-    if (!discount) {
-      setError("");
-      return 0;
-    }
+    return discountPercentage.toFixed(2);
 
     // Return price with 2 decimal places
   };

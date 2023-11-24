@@ -19,6 +19,12 @@ import ClientService from "./backend/ClientService";
 import Booking from "./backend/Booking";
 import "./App.css";
 import URegistration from "./backend/URegistration";
+import Store from "./backend/Store"; 
+import StoreAdd from "./backend/StoreAdd";
+import Service from "./backend/Service";
+import ServiceAdd from "./backend/ServiceAdd";
+import ServiceSubcategory from "./backend/ServiceSubcategory";
+import ServiceSubcategoryAdd from "./backend/ServiceSubcategoryAdd";
 const ROLES = {
   User: 2001,
   Editor: 1984,
@@ -46,24 +52,15 @@ function App() {
               <Route path="login/clientservice" element={<ClientService />} />
               <Route path="login/booking" element={<Booking />} />
               <Route path="login/userregister" element={<URegistration />} />
+              <Route path="login/store" element={<Store />} />
+              <Route path="login/storeadd" element={<StoreAdd />} />
+              <Route path="login/service" element={<Service />} />
+              <Route path="login/serviceadd" element={<ServiceAdd />} />
+              <Route path="login/service-category" element={<ServiceSubcategory />} />
+              <Route path="login/service-category-add" element={<ServiceSubcategoryAdd />} />
             </Route>
-
-            {/* For future use */}
-            {/* 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
-          <Route path="editor" element={<Editor />} />
-        </Route>
-
-        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-          <Route path="admin" element={<Admin />} />
-        </Route>
-
-        <Route element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}>
-          <Route path="lounge" element={<Lounge />} />
-        </Route>
-        */}
+            {/* For future use */}        
           </Route>
-
           {/* Catch all */}
           <Route path="*" element={<Missing />} />
         </Route>
