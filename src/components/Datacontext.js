@@ -15,8 +15,6 @@ export const DataProvider = ({ children }) => {
 
   const [flag, setFlag] = useState(0);
 
-  console.log(flag);
-
   const increment = () => {
     setCount(count + 1);
   };

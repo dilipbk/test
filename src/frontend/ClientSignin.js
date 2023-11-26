@@ -70,37 +70,40 @@ const ClientSignin = () => {
       <CForm className="g-3 needs-validation" noValidate validated={validated}>
         {error && <div style={{ color: "red" }}>{error}</div>}
 
-                <CRow>
-                  <CCol>
-                  <CFormFloating className="mb-3">
-                      <CFormInput
-                        type="text"
-                        id="contactnumber"
-                        placeholder="Mobile Number"
-                        name="phone_no"
-                        value={phone_no}
-                        onChange={handleNumberChange}
-                        autoComplete="number"
-                        feedbackInvalid="Please provide a valid Nunber."
-                        required
-                      />
-                      <CFormLabel htmlFor="contactnumber">Mobile Number</CFormLabel>
-                    </CFormFloating>
-                  </CCol>
-                </CRow>
-                
-                <CRow>
-                  <CCol xs={12} className="mt-2">
-                    <CButton size="lg" color="primary" className=" px-5" onClick={haldelRegistration}>NEXT</CButton>
-                  </CCol>
-                  <p className="mt-3">Not Register yet?  <Link to="/signup">Register here</Link></p>
-                </CRow>
-              </CForm>
-            </CRow>
-          </CCardBody>
-        </CCard>
-      </CContainer>
-    </>
+        <CRow>
+          <CCol md={12} lg={12}>
+            <CFormFloating className="mb-3">
+              <CFormInput
+                type="text"
+                id="contactnumber"
+                placeholder="Mobile Number"
+                name="phone_no"
+                value={phone_no}
+                onChange={handleNumberChange}
+                autoComplete="number"
+                feedbackInvalid="Please provide a valid Nunber."
+                required
+              />
+              <CFormLabel htmlFor="contactnumber">Mobile Number</CFormLabel>
+            </CFormFloating>
+          </CCol>
+
+          <CCol md={12} lg={12}>
+            <div className="d-grid">
+              <Button
+                options={{
+                  size: "lg",
+                  className: "py-3",
+                  onClick: haldelRegistration,
+                }}
+              >
+                Check In
+              </Button>
+            </div>
+          </CCol>
+        </CRow>
+      </CForm>
+    </CRow>
   );
 };
 

@@ -12,61 +12,125 @@ import {
   CFormCheck,
 } from "@coreui/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import DataContext from "../components/Datacontext";
 import "./ClientRegistration.css";
-
+import axios from "../api/axios";
 const URegistration = () => {
-  const [formData, setFormData] = useState({
+  const initialErrors = {
     f_name: "",
     l_name: "",
     phone_no: "",
-  });
-
-  const [errors, setErrors] = useState({});
-  const [error, setError] = useState("");
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    password:"",
+    cpassword:"",
+    email:""
   };
+  const { store_id } = useContext(DataContext);
+  const [f_name, setFName] = useState("");
+  const [l_name, setLName] = useState("");
+  const [phone_no, setPhoneNo] = useState("");
+  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpassword, setCPassword] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [errors, setErrors] = useState(initialErrors);
+
+
+  const isNonEmpty = (value) => value.trim() !== "";
+  const isAlphabetic = (value) => /^[A-Za-z]+$/.test(value);
+  const isNumeric = (value) => /^[0-9]+$/.test(value);
+  const isPhoneValid = (value) => isNumeric(value) && value.length === 10;
+  const [isValid, setIsValid] = useState(true);
+  const validateEmail = (value) => {
+    // Regular expression for email validation
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailPattern.test(value);
+  };
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordMatch(newPassword === cpassword);
+    setPasswordValid(
+      newPassword.length >= 8 &&
+      /[A-Z]/.test(newPassword) && // At least one capital letter
+      /[!@#$%^&*]/.test(newPassword) // At least one symbol (you can adjust the symbols as needed)
+    );
+  };
+  const handleConfirmPasswordChange = (e) => {
+    setCPassword(e.target.value);
+    setPasswordMatch(e.target.value === password);   
+
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    setIsValid(validateEmail(newEmail));
+    console.log(newEmail);
+  };
+
+  let full_name = `${f_name} ${l_name}`;
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Validation logic on form submit
-    const validationErrors = {};
+    validateFields();
+  };
 
-    if (!formData.f_name) {
-      validationErrors.f_name = "First Name is required";
-    } else if (!/^[A-Za-z]+$/.test(formData.f_name)) {
-      validationErrors.f_name = "First Name should contain only alphabets";
+  const validateFields = () => {
+    const newErrors = { ...initialErrors };
+
+    if (!isNonEmpty(f_name)) {
+      newErrors.f_name = "First name is required";
+    } else if (!isAlphabetic(f_name)) {
+      newErrors.f_name = "First name should only contain alphabets";
     }
 
-    if (!formData.l_name) {
-      validationErrors.l_name = "Last Name is required";
-    } else if (!/^[A-Za-z]+$/.test(formData.l_name)) {
-      validationErrors.l_name = "Last Name should contain only alphabets";
+    if (!isNonEmpty(l_name)) {
+      newErrors.l_name = "Last name is required";
+    } else if (!isAlphabetic(l_name)) {
+      newErrors.l_name = "Last name should only contain alphabets";
     }
 
-    if (!formData.phone_no) {
-      validationErrors.phone_no = "Phone Number is required";
-    } else if (
-      !/^[0-9]+$/.test(formData.phone_no) ||
-      formData.phone_no.length !== 10
-    ) {
-      validationErrors.phone_no =
-        "Phone Number should be 10 digits and contain only digits";
+    if (!isNonEmpty(phone_no)) {
+      newErrors.phone_no = "Phone number is required";
+    } else if (!isPhoneValid(phone_no)) {
+      newErrors.phone_no = "Phone number is not valid";
+    }
+    if(password !== cpassword){
+      newErrors.password ="Passwords do not match"
+    }else if(!passwordValid ){
+      newErrors.password ="Password must have at least 8 characters with one capital letter and one symbol"
     }
 
-    if (Object.keys(validationErrors).length === 0) {
-      setError("");
+    if(isValid===false){
+      newErrors.email ="Invalid email address"
+    }
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).every((error) => error === "")) {
+      fetchData();
     } else {
-      setErrors(validationErrors);
-      setError("Please correct the errors in the form.");
+      return;
     }
   };
+
+  const fetchData = async (catid) => {
+    try {
+      const response = await axios.get("/register", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setServiceListData(response.data.ServicesList);
+    } catch (error) {
+      console.error("Error fetching client list:", error);
+    }
+  };
+
+  console.log(full_name);
 
   return (
     <CCard style={{ maxWidth: "768px", width: "100%", margin: "auto" }}>
@@ -82,8 +146,8 @@ const URegistration = () => {
                   id="firstname"
                   placeholder="First Name"
                   name="f_name"
-                  value={formData.f_name}
-                  onChange={handleInputChange}
+                  value={f_name}
+                  onChange={(e) => setFName(e.target.value)}
                 />
                 {errors.f_name && (
                   <p style={{ color: "red" }}>{errors.f_name}</p>
@@ -98,8 +162,8 @@ const URegistration = () => {
                   id="lastname"
                   name="l_name"
                   placeholder="Last Name"
-                  value={formData.l_name}
-                  onChange={handleInputChange}
+                  value={l_name}
+                  onChange={(e) => setLName(e.target.value)}
                 />
                 {errors.l_name && (
                   <p style={{ color: "red" }}>{errors.l_name}</p>
@@ -107,6 +171,18 @@ const URegistration = () => {
                 <CFormLabel htmlFor="lastname">Last name</CFormLabel>
               </CFormFloating>
             </CCol>
+            <CFormInput
+              type="hidden"
+              id="fullname"
+              name="full_name"
+              value={full_name}
+            />
+            <CFormInput
+              type="hidden"
+              id="store_id"
+              name="store_id"
+              value={store_id}
+            />
           </CRow>
 
           <CRow>
@@ -117,13 +193,81 @@ const URegistration = () => {
                   id="mobile_number"
                   name="phone_no"
                   placeholder="Mobile Number"
-                  value={formData.phone_no}
-                  onChange={handleInputChange}
+                  value={phone_no}
+                  onChange={(e) => setPhoneNo(e.target.value)}
                 />
-                {errors.l_name && (
+                {errors.phone_no && (
                   <p style={{ color: "red" }}>{errors.phone_no}</p>
                 )}
                 <CFormLabel htmlFor="mobile_number">Mobile Number</CFormLabel>
+              </CFormFloating>
+            </CCol>
+            <CCol md>
+              <CFormFloating className="mb-3">
+                <CFormInput
+                  type="tel"
+                  id="role"
+                  name="role"
+                  placeholder="Role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                {errors.role && (
+                  <p style={{ color: "red" }}>{errors.role}</p>
+                )}
+                <CFormLabel htmlFor="role">Role</CFormLabel>
+              </CFormFloating>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md>
+              <CFormFloating className="mb-3">
+                <CFormInput
+                  type="email"
+                  id="email"
+                  placeholder="Email Address"
+                  name="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+                {errors.email && (
+                  <p style={{ color: "red" }}>{errors.email}</p>
+                )}
+                <CFormLabel htmlFor="email">Email Address</CFormLabel>
+              </CFormFloating>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md>
+              <CFormFloating className="mb-3">
+                <CFormInput
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                  name="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                {errors.password && (
+                  <p style={{ color: "red" }}>{errors.password}</p>
+                )}
+                <CFormLabel htmlFor="password">Password</CFormLabel>
+              </CFormFloating>
+            </CCol>
+            <CCol md>
+              <CFormFloating className="mb-3">
+                <CFormInput
+                  type="password"
+                  id="cpassword"
+                  placeholder="Confirm Password"
+                  name="cpassword"
+                  value={cpassword}
+                  onChange={handleConfirmPasswordChange}
+                />
+                {errors.cpassword && (
+                  <p style={{ color: "red" }}>{errors.cpassword}</p>
+                )}
+                <CFormLabel htmlFor="cpassword">Confirm Password</CFormLabel>
               </CFormFloating>
             </CCol>
           </CRow>
