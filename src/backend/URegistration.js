@@ -12,18 +12,25 @@ import {
   CFormCheck,
 } from "@coreui/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import DataContext from "../components/Datacontext";
+import useAuth from "../hooks/useAuth";
 import "./ClientRegistration.css";
 import axios from "../api/axios";
 const URegistration = () => {
+  const { auth } = useAuth();
+
+  const access_token = auth.access_token;
+
+  const [serviceListData, setServiceListData] = useState([]);
+
   const initialErrors = {
     f_name: "",
     l_name: "",
     phone_no: "",
-    password:"",
-    cpassword:"",
-    email:""
+    password: "",
+    cpassword: "",
+    email: "",
   };
   const { store_id } = useContext(DataContext);
   const [f_name, setFName] = useState("");
@@ -36,7 +43,6 @@ const URegistration = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [passwordValid, setPasswordValid] = useState(false);
   const [errors, setErrors] = useState(initialErrors);
-
 
   const isNonEmpty = (value) => value.trim() !== "";
   const isAlphabetic = (value) => /^[A-Za-z]+$/.test(value);
@@ -54,14 +60,13 @@ const URegistration = () => {
     setPasswordMatch(newPassword === cpassword);
     setPasswordValid(
       newPassword.length >= 8 &&
-      /[A-Z]/.test(newPassword) && // At least one capital letter
-      /[!@#$%^&*]/.test(newPassword) // At least one symbol (you can adjust the symbols as needed)
+        /[A-Z]/.test(newPassword) && // At least one capital letter
+        /[!@#$%^&*]/.test(newPassword) // At least one symbol (you can adjust the symbols as needed)
     );
   };
   const handleConfirmPasswordChange = (e) => {
     setCPassword(e.target.value);
-    setPasswordMatch(e.target.value === password);   
-
+    setPasswordMatch(e.target.value === password);
   };
 
   const handleEmailChange = (e) => {
@@ -98,14 +103,15 @@ const URegistration = () => {
     } else if (!isPhoneValid(phone_no)) {
       newErrors.phone_no = "Phone number is not valid";
     }
-    if(password !== cpassword){
-      newErrors.password ="Passwords do not match"
-    }else if(!passwordValid ){
-      newErrors.password ="Password must have at least 8 characters with one capital letter and one symbol"
+    if (password !== cpassword) {
+      newErrors.password = "Passwords do not match";
+    } else if (!passwordValid) {
+      newErrors.password =
+        "Password must have at least 8 characters with one capital letter and one symbol";
     }
 
-    if(isValid===false){
-      newErrors.email ="Invalid email address"
+    if (isValid === false) {
+      newErrors.email = "Invalid email address";
     }
 
     setErrors(newErrors);
@@ -212,9 +218,7 @@ const URegistration = () => {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                 />
-                {errors.role && (
-                  <p style={{ color: "red" }}>{errors.role}</p>
-                )}
+                {errors.role && <p style={{ color: "red" }}>{errors.role}</p>}
                 <CFormLabel htmlFor="role">Role</CFormLabel>
               </CFormFloating>
             </CCol>
@@ -230,9 +234,7 @@ const URegistration = () => {
                   value={email}
                   onChange={handleEmailChange}
                 />
-                {errors.email && (
-                  <p style={{ color: "red" }}>{errors.email}</p>
-                )}
+                {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
                 <CFormLabel htmlFor="email">Email Address</CFormLabel>
               </CFormFloating>
             </CCol>
